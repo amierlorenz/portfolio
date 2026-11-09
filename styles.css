@@ -295,31 +295,6 @@ button { font: inherit; }
     padding: 0 24px;
 }
 
-.work-arrows { display: flex; gap: 12px; }
-
-.work-arrow {
-    all: unset;
-    box-sizing: border-box;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 1px solid #222;
-    display: grid;
-    place-items: center;
-    font-size: 20px;
-    background: #fff;
-    color: #222;
-    cursor: pointer;
-    transition: background-color .4s ease, color .4s ease, opacity .6s ease;
-}
-
-.work-arrow:hover:not(:disabled),
-.work-arrow:focus-visible { background: #222; color: #fff; }
-.work-arrow:disabled { opacity: .2; cursor: default; }
-
-.work-arrow span { display: block; transition: transform .5s cubic-bezier(.25,.8,.25,1); }
-.work-arrow:hover:not(:disabled) span { transform: scale(1.2); }
-
 .rail-work {
     margin-top: clamp(48px, 6vw, 80px);
     display: flex;

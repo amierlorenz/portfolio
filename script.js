@@ -133,14 +133,7 @@ function setupWorkRail() {
     if (!rail) return;
 
     const cards = Array.from(rail.querySelectorAll('.work-card'));
-    const prev = document.getElementById('work-prev');
-    const next = document.getElementById('work-next');
     const fill = document.getElementById('work-progress-fill');
-
-    const step = () => {
-        const card = cards[0];
-        return card ? card.getBoundingClientRect().width + 24 : 644;
-    };
 
     const maxScroll = () => Math.max(0, rail.scrollWidth - rail.clientWidth);
 
@@ -148,17 +141,12 @@ function setupWorkRail() {
         const max = maxScroll();
         const pct = max > 0 ? Math.min(1, rail.scrollLeft / max) : 0;
         if (fill) fill.style.width = (10 + pct * 90) + '%';
-        if (prev) prev.disabled = rail.scrollLeft <= 5;
-        if (next) next.disabled = rail.scrollLeft >= max - 5;
     };
 
     rail.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     update();
 
-    // Arrow buttons: scroll one card at a time
-    if (prev) prev.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
-    if (next) next.addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
 
     // Temporarily disable CSS snap while scrolling, re-enable on idle so it snaps to the nearest card
     let snapTimer = null;
