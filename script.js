@@ -44,7 +44,7 @@ function setupPillars() {
     const apply = () => {
         cards.forEach((card, j) => card.classList.toggle('is-active', j === idx && canAnimate()));
         grid.style.gridTemplateColumns = canAnimate()
-            ? cards.map((_, j) => (j === idx ? '1.9fr' : '1fr')).join(' ')
+            ? cards.map((_, j) => (j === idx ? '2.2fr' : '1fr')).join(' ')
             : '1fr 1fr 1fr';
     };
 
@@ -76,7 +76,7 @@ function setupQuotes() {
     const apply = () => {
         cards.forEach((card, j) => card.classList.toggle('is-active', j === idx && canAnimate()));
         grid.style.gridTemplateColumns = canAnimate()
-            ? cards.map((_, j) => (j === idx ? '1.9fr' : '1fr')).join(' ')
+            ? cards.map((_, j) => (j === idx ? '2.2fr' : '1fr')).join(' ')
             : '1fr 1fr 1fr';
     };
 

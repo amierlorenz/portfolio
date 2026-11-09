@@ -81,15 +81,16 @@ button { font: inherit; }
     margin: 0;
     font-size: 16px;
     line-height: 1.5;
-    max-width: 0;
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
     text-wrap: pretty;
-    transition: opacity .5s ease, max-width .55s cubic-bezier(.22,.8,.2,1), max-height .55s cubic-bezier(.22,.8,.2,1);
+    /* Mask reveal: fixed width + height so the text never reflows; the card's
+       overflow:hidden edge uncovers it as the column widens, while it fades in. */
+    width: min(380px, 60vw);
+    height: 4.5em;
+    opacity: 0;
+    transition: opacity .5s ease;
 }
 
-.pillar-card.is-active .pillar-text { max-width: 360px; max-height: 240px; opacity: 1; }
+.pillar-card.is-active .pillar-text { opacity: 1; }
 
 /* Digital-garden palette (from mieracle.com) */
 .pillar--red { background: #ff7e59; }
@@ -149,16 +150,19 @@ button { font: inherit; }
     font-weight: 400;
     font-size: clamp(30px, 3vw, 40px);
     line-height: 1.05;
-    max-width: 0;
+    text-wrap: pretty;
+    /* Same mask reveal as the About cards: width fits the expanded card */
+    width: min(460px, calc((min(100vw, 1180px) - 72px) * .524 - 72px));
+    min-height: 3em;
     opacity: 0;
-    overflow: hidden;
-    transition: max-width .55s cubic-bezier(.22,.8,.2,1), opacity .5s ease;
+    transition: opacity .5s ease;
 }
 
-.quote-card.is-active .quote-main { max-width: 360px; opacity: 1; }
+/* Text only fades in on the active card; it doesn't grow with the card */
+.quote-card.is-active .quote-main { opacity: 1; }
 
 .quote-label {
-    align-self: flex-end;
+    align-self: flex-start;
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 500;
@@ -413,11 +417,11 @@ button { font: inherit; }
     #pillar-grid { grid-template-columns: 1fr !important; height: auto; }
     .pillar-card { gap: 24px; min-height: 260px; }
     .pillar-title { min-height: 0; }
-    .pillar-text { max-width: none; max-height: none; opacity: 1; }
+    .pillar-text { width: auto; height: auto; opacity: 1; }
 
     #quote-grid { grid-template-columns: 1fr !important; height: auto; }
     .quote-card { min-height: 300px; gap: 40px; }
-    .quote-main { max-width: none; opacity: 1; }
+    .quote-main { width: auto; min-height: 0; opacity: 1; }
 
     .work-media { pointer-events: none; }
 }
