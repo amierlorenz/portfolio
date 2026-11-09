@@ -6,7 +6,11 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         const target = document.querySelector(href);
         if (!target) return;
         e.preventDefault();
-        window.scrollTo({ top: target.offsetTop - 84, behavior: 'smooth' });
+        let top = target.offsetTop - 84;
+        // About: scroll just far enough that the cards are fully on screen, keeping as much of the intro band as possible
+        const fit = target.id === 'about' && document.getElementById('pillar-grid');
+        if (fit) top = Math.max(top, fit.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 24);
+        window.scrollTo({ top, behavior: 'smooth' });
     });
 });
 
