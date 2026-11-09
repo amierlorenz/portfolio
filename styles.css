@@ -4,7 +4,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Rubik', sans-serif;
     color: #222;
     background: #F5F5F5;
     -webkit-font-smoothing: antialiased;
@@ -63,13 +63,13 @@ button { font: inherit; }
 
 #pillar-grid.is-hovering .pillar-card:not(.is-active) { opacity: .3; }
 
-.pillar-num { font-family: 'Geist Mono', monospace; font-size: 14px; line-height: 1.5; }
+.pillar-num { font-family: 'Fira Code', monospace; font-size: 14px; line-height: 1.5; }
 
 .pillar-body { display: flex; flex-direction: column; gap: 14px; }
 
 .pillar-title {
     margin: 0;
-    font-family: 'Animal Condensed', 'Instrument Serif', serif;
+    font-family: 'Instrument Serif', serif;
     font-weight: 400;
     font-size: clamp(36px, 3.6vw, 48px);
     line-height: 1;
@@ -167,7 +167,7 @@ button { font: inherit; }
 
 .quote-label {
     align-self: flex-start;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Rubik', sans-serif;
     font-size: 14px;
     font-weight: 500;
     line-height: 1.5;
@@ -344,7 +344,7 @@ button { font: inherit; }
 .work-card:hover .work-media img { transform: scale(1.06); }
 
 .work-title {
-    font-family: 'Animal Condensed', 'Instrument Serif', serif;
+    font-family: 'Instrument Serif', serif;
     font-weight: 400;
     font-size: clamp(36px, 3.6vw, 48px);
     line-height: 1;
