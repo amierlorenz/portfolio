@@ -41,7 +41,7 @@ button { font: inherit; }
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 12px;
-    height: clamp(420px, 44vw, 600px);
+    height: clamp(320px, 28vw, 360px);
     transition: grid-template-columns .7s cubic-bezier(.22,.8,.2,1);
 }
 
@@ -56,7 +56,7 @@ button { font: inherit; }
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 48px;
+    gap: 20px;
     color: #222;
     transition: opacity .5s ease;
 }
@@ -93,9 +93,13 @@ button { font: inherit; }
 .pillar-card.is-active .pillar-text { opacity: 1; }
 
 /* Digital-garden palette (from mieracle.com) */
-.pillar--red { background: #ff7e59; }
-.pillar--cyan { background: #4cc6ce; }
-.pillar--yellow { background: #ffd55b; }
+/* White cards, colored text. Deeper shades of the palette so the text stays readable on white:
+   --c for the number and title (large text, >= 3:1); descriptions stay #222. */
+.pillar--red, .pillar--cyan, .pillar--yellow { background: #fff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); color: var(--c); }
+.pillar--red { --c: #e0582f; }
+.pillar--cyan { --c: #2a9ea6; }
+.pillar--yellow { --c: #b38500; }
+.pillar-card .pillar-text { color: #222; }
 
 /* ============ Quote cards (Skills) ============ */
 #quote-grid {
