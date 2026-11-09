@@ -370,20 +370,32 @@ button { font: inherit; }
 
 .work-chip-label {
     max-width: 0;
-    margin-right: 0;
     opacity: 0;
     overflow: hidden;
     white-space: nowrap;
     font-size: 16px;
     font-weight: 600;
     line-height: 1.25;
-    transition: max-width .6s cubic-bezier(.65,0,.25,1), margin-right .6s cubic-bezier(.65,0,.25,1), opacity .4s ease;
+    transition: max-width .6s cubic-bezier(.65,0,.25,1), margin .6s cubic-bezier(.65,0,.25,1), opacity .4s ease;
 }
 
-.work-card:hover .work-chip-label { max-width: 150px; margin-right: 8px; opacity: 1; }
+.work-card:hover .work-chip-label { max-width: 170px; margin: 0 8px; opacity: 1; }
 
-.work-chip svg { flex: none; transform: rotate(-45deg); transition: transform .6s cubic-bezier(.65,0,.25,1); }
-.work-card:hover .work-chip svg { transform: rotate(0); }
+/* GitHub mark slides in from the left on hover */
+.work-chip-gh {
+    display: inline-flex;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateX(-10px);
+    transition: max-width .6s cubic-bezier(.65,0,.25,1), opacity .4s ease, transform .6s cubic-bezier(.65,0,.25,1);
+}
+
+.work-card:hover .work-chip-gh { max-width: 24px; opacity: 1; transform: none; }
+
+.work-chip svg { flex: none; display: block; }
+.work-chip-arrow { transform: rotate(-45deg); transition: transform .6s cubic-bezier(.65,0,.25,1); }
+.work-card:hover .work-chip-arrow { transform: rotate(0); }
 
 .work-progress-wrap { max-width: 1180px; margin: 40px auto 0; padding: 0 24px; }
 
