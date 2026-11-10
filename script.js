@@ -1,18 +1,57 @@
 // ============ Smooth anchor scrolling ============
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener('click', (e) => {
-        const href = anchor.getAttribute('href');
-        if (!href || href.length < 2) return;
-        const target = document.querySelector(href);
-        if (!target) return;
-        e.preventDefault();
-        let top = target.offsetTop - 84;
-        // About: scroll just far enough that the cards are fully on screen, keeping as much of the intro band as possible
-        const fit = target.id === 'about' && document.getElementById('pillar-grid');
-        if (fit) top = Math.max(top, fit.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 24);
-        window.scrollTo({ top, behavior: 'smooth' });
-    });
+// Delegated, so the phone menu's links get the same offset and About fit-scroll as the nav's.
+// The menu closes itself (and unlocks scrolling) in its own click listener, which runs before this one.
+document.addEventListener('click', (e) => {
+    const anchor = e.target.closest('a[href^="#"]');
+    if (!anchor) return;
+    const href = anchor.getAttribute('href');
+    if (!href || href.length < 2) return;
+    const target = document.querySelector(href);
+    if (!target) return;
+    e.preventDefault();
+    let top = target.offsetTop - 84;
+    // About: scroll just far enough that the cards are fully on screen, keeping as much of the intro band as possible
+    const fit = target.id === 'about' && document.getElementById('pillar-grid');
+    if (fit) top = Math.max(top, fit.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 24);
+    window.scrollTo({ top, behavior: 'smooth' });
 });
+
+// ============ Phone menu (≤760px) ============
+// #menu-button opens the full-screen #mobile-menu: focus moves to its first link, Tab stays inside
+// (button + menu), Esc or picking a link closes it and focus returns to the button, and the page
+// behind can't scroll while it's open.
+function setupMobileMenu() {
+    const btn = document.getElementById('menu-button');
+    const menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+    let open = false;
+
+    function setOpen(next) {
+        if (open === next) return;
+        open = next;
+        btn.setAttribute('aria-expanded', String(open));
+        menu.classList.toggle('is-open', open);
+        menu.inert = !open;
+        document.documentElement.style.overflow = open ? 'hidden' : '';
+        if (open) requestAnimationFrame(() => menu.querySelector('a').focus({ preventScroll: true }));
+        else btn.focus({ preventScroll: true });
+    }
+
+    menu.inert = true;
+    btn.addEventListener('click', () => setOpen(!open));
+    menu.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+    document.addEventListener('keydown', (e) => {
+        if (!open) return;
+        if (e.key === 'Escape') { e.preventDefault(); setOpen(false); return; }
+        if (e.key !== 'Tab') return;
+        const items = [btn, ...menu.querySelectorAll('a')];
+        const first = items[0], last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+    // Widening past the breakpoint hides the menu, so close it (and release the scroll lock)
+    window.matchMedia('(max-width: 760px)').addEventListener('change', (e) => { if (!e.matches) setOpen(false); });
+}
 
 // ============ Reveal animations ============
 function setupReveal() {
@@ -475,6 +514,7 @@ function setupTimeline() {
 
 // ============ Init ============
 document.addEventListener('DOMContentLoaded', () => {
+    setupMobileMenu();
     setupReveal();
     setupPillars();
     setupQuotes();

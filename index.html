@@ -14,19 +14,20 @@
 <body>
     <div style="min-height:100vh;overflow-x:clip;background-color:#F5F5F5;transition:background-color 1s cubic-bezier(.4,0,.2,1)">
         <header style="position:fixed;top:16px;left:16px;right:16px;z-index:40;display:flex;justify-content:center;transform:translateY(0);transition:transform .5s cubic-bezier(.22,.8,.2,1)">
-            <nav style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 12px 10px 10px;border-radius:999px;position:relative;isolation:isolate">
+            <nav style="width:100%;max-width:1180px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 12px 10px 10px;border-radius:999px;position:relative;isolation:isolate">
                 <div aria-hidden="true" style="position:absolute;inset:0;border-radius:999px;background:rgba(255,255,255,.75);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);z-index:-1;pointer-events:none"></div>
                 <a href="#top" aria-label="Amier Lorenz Davis" style="display:flex;align-items:center;opacity:1;transition:opacity .3s ease">
                     <img src="assets/avatar.webp" alt="Amier Lorenz Davis" class="avatar" style="width:44px;height:44px">
                 </a>
-                <div style="display:flex;gap:clamp(2px,1.2vw,14px);font-size:15px;font-weight:400;line-height:1.4;flex-wrap:wrap;align-items:center">
+                <div class="nav-links">
                     <a href="#about" class="nav-link">About</a>
                     <a href="#projects" class="nav-link">Projects</a>
+                    <a href="#timeline" class="nav-link">Timeline</a>
                     <a href="#skills" class="nav-link">Skills</a>
                     <!-- Resume placeholder: drop resume.pdf next to index.html and this link works -->
                     <a href="resume.pdf" class="nav-link" target="_blank" rel="noopener">Resume</a>
                 </div>
-                <div style="display:flex;align-items:center;gap:8px">
+                <div class="nav-actions">
                     <a href="#contact" class="nav-cta" style="background:#222;color:#fff;padding:12px 22px;border-radius:999px;font-size:16px;font-weight:600;line-height:1.25;transition:background-color .4s ease,color .4s ease,opacity .4s ease;display:block">
                         <span style="display:block;height:1.25em;line-height:1.25em;overflow:hidden">
                             <span style="display:flex;flex-direction:column;transform:translateY(0);transition:transform .5s cubic-bezier(.65,0,.25,1)">
@@ -36,8 +37,26 @@
                         </span>
                     </a>
                 </div>
+                <button id="menu-button" class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <span></span><span></span>
+                </button>
             </nav>
         </header>
+
+        <!-- Phone menu (≤760px): full-screen overlay opened by #menu-button; behavior in setupMobileMenu() -->
+        <nav id="mobile-menu" class="mobile-menu" aria-label="Menu">
+            <ul class="mobile-menu-list">
+                <li><a href="#about" style="--i:0">About</a></li>
+                <li><a href="#projects" style="--i:1">Projects</a></li>
+                <li><a href="#timeline" style="--i:2">Timeline</a></li>
+                <li><a href="#skills" style="--i:3">Skills</a></li>
+                <li><a href="#contact" style="--i:4">Contact</a></li>
+            </ul>
+            <a href="resume.pdf" class="mobile-menu-resume" download>
+                <span>Download my resume</span>
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12"/><path d="m6 10 6 6 6-6"/><path d="M5 20h14"/></svg>
+            </a>
+        </nav>
 
         <section id="top" data-bg="#F5F5F5" style="min-height:100vh;padding:120px 24px;display:flex;align-items:center;justify-content:center;position:relative;overflow:clip">
             <h1 data-px="0.08" style="will-change:transform;position:relative;z-index:1;margin:0;max-width:1240px;text-align:center;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(52px,6.4vw,96px);line-height:1.02;letter-spacing:-.01em">

@@ -18,6 +18,57 @@ a:hover { color: #4cc6ce; }
 .nav-link { padding: 8px 12px; opacity: 1; transition: opacity .6s cubic-bezier(.22,.8,.2,1); }
 .nav-link:hover { color: #222; opacity: .55; }
 .nav-cta:hover { color: #fff; opacity: .8; }
+.nav-links { display: flex; align-items: center; gap: clamp(2px, 1.2vw, 14px); font-size: 15px; font-weight: 400; line-height: 1.4; }
+.nav-actions { display: flex; align-items: center; gap: 8px; }
+
+/* ============ Phone menu (≤760px) ============ */
+/* The pill keeps the avatar and a menu button; the button opens a full-screen overlay
+   that sits just under the pill (z-index 39 vs the header's 40), so the button stays on top as the close X. */
+.menu-btn { display: none; place-items: center; width: 44px; height: 44px; flex: none; border: 0; border-radius: 999px; background: #222; color: #fff; cursor: pointer; }
+.menu-btn span { grid-area: 1 / 1; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .4s cubic-bezier(.65,0,.25,1); }
+.menu-btn span:first-child { transform: translateY(-4px); }
+.menu-btn span:last-child { transform: translateY(4px); }
+.menu-btn[aria-expanded="true"] span:first-child { transform: rotate(45deg); }
+.menu-btn[aria-expanded="true"] span:last-child { transform: rotate(-45deg); }
+
+.mobile-menu { display: none; }
+
+@media (max-width: 760px) {
+    .nav-links, .nav-actions { display: none; }
+    .menu-btn { display: grid; }
+
+    .mobile-menu {
+        position: fixed; inset: 0; z-index: 39;
+        display: flex; flex-direction: column;
+        padding: 112px 28px calc(32px + env(safe-area-inset-bottom));
+        background: #F5F5F5;
+        overflow-y: auto;
+        opacity: 0; visibility: hidden;
+        transition: opacity .35s ease, visibility 0s .45s;
+    }
+    .mobile-menu.is-open { opacity: 1; visibility: visible; transition: opacity .35s ease; }
+}
+
+.mobile-menu-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.mobile-menu-list a {
+    display: block;
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(48px, 14vw, 64px);
+    line-height: 1.05;
+    opacity: 0; translate: 0 18px;
+    transition: translate .5s cubic-bezier(.22,.8,.2,1), opacity .4s ease;
+}
+.mobile-menu.is-open .mobile-menu-list a { opacity: 1; translate: 0 0; transition-delay: calc(var(--i) * 45ms + 80ms); }
+
+.mobile-menu-resume {
+    margin-top: auto;
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    padding: 18px 24px;
+    border-radius: 999px;
+    background: #ffd55b; color: #222;
+    font-size: 16px; font-weight: 600; line-height: 1.25;
+}
+.mobile-menu-resume:hover { color: #222; opacity: .8; }
 button { font: inherit; }
 
 /* ============ Keyframes (hero) ============ */
