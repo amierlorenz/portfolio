@@ -577,7 +577,7 @@ button { font: inherit; }
 
 /* Title words: slot-machine reels. Clipped to 1.2em for the glyphs, but negative margins
    keep the box at the title's line height; JS lines up the baselines. */
-.tl-word { display: inline-block; cursor: pointer; }
+.tl-word { display: inline-block; white-space: nowrap; cursor: pointer; }
 .tl-word:focus-visible { outline: 2px solid #222; outline-offset: 4px; border-radius: 4px; }
 .tl-word[data-lead] { cursor: default; }
 .tl-slot { display: inline-block; height: 1.2em; margin: -.125em 0; overflow: hidden; vertical-align: 0; transition: width .6s cubic-bezier(.22,.8,.2,1); }

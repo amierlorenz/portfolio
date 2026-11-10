@@ -341,6 +341,9 @@ function setupTimeline() {
 
     // Line the slot's baseline up with the title's by measuring: a zero-size inline-block sits
     // exactly on its line's baseline, so compare one inside the slot with one beside it.
+    // The reference probe goes inside the word (in front of the slot), not before it in the title:
+    // when the word wraps to the next line (phones), a probe before it stays on the previous line
+    // and the line gap would be added to the offset, throwing the word up and out of the title.
     function align(host) {
         const slot = host && host.querySelector('.tl-slot');
         if (!slot) return;
@@ -348,7 +351,7 @@ function setupTimeline() {
         slot.style.verticalAlign = '0px';
         for (let pass = 0; pass < 2; pass++) {
             const outer = probe(), inner = probe();
-            host.parentNode.insertBefore(outer, host);
+            host.insertBefore(outer, host.firstChild);
             slot.querySelector('.tl-sw').appendChild(inner);
             const d = inner.getBoundingClientRect().top - outer.getBoundingClientRect().top;
             outer.remove(); inner.remove();
