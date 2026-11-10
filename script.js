@@ -333,12 +333,51 @@ function setupTimeline() {
     const reelSlot = (words) => `<span class="tl-slot"><span class="tl-reel">${words.map((w) => `<span class="tl-sw" style="color:${colorOf(w)}">${w}</span>`).join('')}</span></span>`;
     const INTRO = ['built', 'learned', 'taught', 'built', 'learned', 'taught', 'built', 'learned', 'taught', 'done'];
 
+    // Until the intro has run, the verb is the reel and the year phrase waits out of the layout
+    // (it's revealed once the reel lands, so it never has to hop lines while the reel resizes).
+    const introPending = () => !introDone && !reduceMotion;
+    const titleHTML = (t, y, intro) =>
+        `<span class="tl-word" data-lead>${staticSlot(leadOf(t), false)}</span> I've ` +
+        `<span class="tl-word" data-type role="button" tabindex="0" aria-label="Filter by type">${intro ? reelSlot(INTRO) : staticSlot(verbOf(t), true)}</span> ` +
+        `<span class="tl-word${intro ? ' tl-wait' : ''}" data-year role="button" tabindex="0" aria-label="Filter by year">${staticSlot(yearPhrase(y), true)}</span>`;
+
     function renderTitle() {
-        title.innerHTML =
-            `<span class="tl-word" data-lead>${staticSlot(leadOf(type), false)}</span> I've ` +
-            `<span class="tl-word" data-type role="button" tabindex="0" aria-label="Filter by type">${introDone || reduceMotion ? staticSlot(verbOf(type), true) : reelSlot(INTRO)}</span> ` +
-            `<span class="tl-word" data-year role="button" tabindex="0" aria-label="Filter by year">${staticSlot(yearPhrase(year), true)}</span>`;
+        title.innerHTML = titleHTML(type, year, introPending());
         title.querySelectorAll('.tl-word').forEach(align);
+        holdIntroHeight();
+    }
+
+    // How tall the title is once it settles on type `t` and year `y`, measured on a hidden copy
+    // so the live title (maybe mid-roll) isn't touched.
+    function settledHeight(t, y) {
+        const c = title.cloneNode(false);
+        c.removeAttribute('aria-live');
+        c.setAttribute('aria-hidden', 'true');
+        c.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;width:${title.clientWidth}px`;
+        c.innerHTML = titleHTML(t, y, false);
+        title.after(c);
+        c.querySelectorAll('.tl-word').forEach(align);
+        const h = c.offsetHeight;
+        c.remove();
+        return h;
+    }
+    // On phones the title's line count can change with the words (two lines while "so far"
+    // wraps, one when it fits). Hold or glide its height so the timeline below never jumps.
+    function holdIntroHeight() {
+        if (introPending()) title.style.height = settledHeight(type, year) + 'px';
+    }
+    let heightTimer;
+    function glideHeight({ duration, easing }) {
+        const from = title.offsetHeight, to = settledHeight(type, year);
+        clearTimeout(heightTimer);
+        if (from !== to) {
+            title.style.transition = 'none';
+            title.style.height = from + 'px';
+            void title.offsetHeight;
+            title.style.transition = `height ${duration}ms ${easing}`;
+            title.style.height = to + 'px';
+        }
+        heightTimer = setTimeout(() => { title.style.transition = ''; title.style.height = ''; }, duration + 40);
     }
 
     // Line the slot's baseline up with the title's by measuring: a zero-size inline-block sits
@@ -368,27 +407,64 @@ function setupTimeline() {
         }
     }
 
+    // A step roll changes a slot's width, and on phones that can move a word onto another line
+    // ("so far" hops between line 2 and the end of line 1). A line change can't transition, so
+    // cross-fade it: a ResizeObserver runs after layout and before paint, and any word whose line
+    // changed leaves a fading copy where it was last drawn while it fades in at its new spot.
+    const wraps = new Map(); // word -> { top: layout offsetTop, rect: last drawn rect, anim }
+    function followWraps(recordOnly) {
+        const jump = parseFloat(getComputedStyle(title).fontSize) * .4; // well under a line, well over align()'s nudges
+        title.querySelectorAll('.tl-word').forEach((w) => {
+            if (!w.offsetParent) return; // waiting out of the layout
+            const s = wraps.get(w);
+            if (s && recordOnly !== true && Math.abs(w.offsetTop - s.top) > jump) {
+                const box = title.getBoundingClientRect();
+                const ghost = w.cloneNode(true);
+                ghost.className = 'tl-ghost';
+                ['role', 'tabindex', 'aria-label'].forEach((a) => ghost.removeAttribute(a));
+                ghost.setAttribute('aria-hidden', 'true');
+                ghost.style.left = (s.rect.left - box.left) + 'px';
+                ghost.style.top = (s.rect.top - box.top) + 'px';
+                title.appendChild(ghost);
+                ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, easing: 'ease-out', fill: 'forwards' }).onfinish = () => ghost.remove();
+                if (s.anim) s.anim.cancel();
+                s.anim = w.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 320, delay: 120, easing: 'ease-in', fill: 'backwards' });
+            }
+            wraps.set(w, { top: w.offsetTop, rect: w.getBoundingClientRect(), anim: s && s.anim });
+        });
+    }
+    const wrapWatch = new ResizeObserver(followWraps);
+
     // Spin `host`'s reel through `words`, land on the last one and draw its underline in.
     function roll(host, words, { duration, easing, glide }, done) {
         const underline = !host.hasAttribute('data-lead');
         const last = words[words.length - 1];
         if (reduceMotion) { host.innerHTML = staticSlot(last, underline); align(host); done && done(); return; }
+        followWraps(true); // record where every word sits before the slot changes
         host.innerHTML = reelSlot(words);
         align(host);
         const slot = host.querySelector('.tl-slot'), reel = slot.querySelector('.tl-reel');
+        wrapWatch.observe(slot);
         const items = [...reel.children], lastEl = items[items.length - 1];
+        // Exact (fractional) sizes, not offsetWidth/offsetHeight: those round to whole pixels, and
+        // a row that's really 62.4px tall times nine rows left the reel landing ~3.5px low, so the
+        // word snapped up when the static word replaced the reel at the end.
+        const box = (el) => el.getBoundingClientRect();
+        const lastW = box(lastEl).width;
         if (glide) {
             // width glides from the old word to the new one, so the words after it slide smoothly
             slot.style.transition = `width ${duration}ms ${easing}`;
-            slot.style.width = items[0].offsetWidth + 'px';
+            slot.style.width = box(items[0]).width + 'px';
             void slot.offsetWidth;
-            slot.style.width = lastEl.offsetWidth + 'px';
+            slot.style.width = lastW + 'px';
         } else {
-            slot.style.width = Math.max(...items.map((el) => el.offsetWidth)) + 'px';
-            setTimeout(() => { slot.style.width = lastEl.offsetWidth + 'px'; }, duration * .6);
+            slot.style.width = Math.max(...items.map((el) => box(el).width)) + 'px';
+            setTimeout(() => { slot.style.width = lastW + 'px'; }, duration * .6);
         }
-        reel.animate([{ transform: 'translateY(0)' }, { transform: `translateY(${-(items.length - 1) * lastEl.offsetHeight}px)` }], { duration, easing, fill: 'forwards' });
+        const travel = box(lastEl).top - box(items[0]).top;
+        reel.animate([{ transform: 'translateY(0)' }, { transform: `translateY(${-travel}px)` }], { duration, easing, fill: 'forwards' });
         setTimeout(() => {
+            wrapWatch.unobserve(slot);
             host.innerHTML = staticSlot(last, underline);
             align(host);
             const bar = host.querySelector('.tl-ul');
@@ -407,6 +483,7 @@ function setupTimeline() {
         rollingType = true;
         roll(title.querySelector('[data-type]'), [fromVerb, verbOf(type)], STEP_ROLL, () => { rollingType = false; });
         if (leadOf(type) !== fromLead) roll(title.querySelector('[data-lead]'), [fromLead, leadOf(type)], STEP_ROLL);
+        glideHeight(STEP_ROLL);
         update();
     }
     function stepYear() {
@@ -417,6 +494,7 @@ function setupTimeline() {
         year = i < 0 ? null : YEARS[i];
         rollingYear = true;
         roll(title.querySelector('[data-year]'), [from, yearPhrase(year)], STEP_ROLL, () => { rollingYear = false; });
+        glideHeight(STEP_ROLL);
         update();
     }
     const activate = (e) => {
@@ -502,11 +580,13 @@ function setupTimeline() {
     fontsReady.then(() => {
         toEnd();
         title.querySelectorAll('.tl-word').forEach((w) => { if (!(w.hasAttribute('data-type') && rollingType)) align(w); });
+        holdIntroHeight();
     });
     window.addEventListener('resize', () => {
         positionLine();
         // re-measure the title words (font size and metrics change with the window)
         title.querySelectorAll('.tl-word').forEach((w) => { if (!rollingType && !rollingYear) align(w); });
+        holdIntroHeight();
     });
     if (reduceMotion) { introDone = true; return; }
     const io = new IntersectionObserver((entries) => {
@@ -516,7 +596,14 @@ function setupTimeline() {
         fontsReady.then(() => roll(title.querySelector('[data-type]'), INTRO, { duration: 1500, easing: 'cubic-bezier(.3,.65,.35,1)' }, () => {
             introDone = true;
             rollingType = false;
+            // the reel has landed: bring the year phrase in at its final spot, then draw its underline
+            const yr = title.querySelector('[data-year]');
+            yr.classList.remove('tl-wait');
             title.querySelectorAll('.tl-word').forEach(align);
+            title.style.height = '';
+            yr.animate([{ opacity: 0, transform: 'translateY(.15em)' }, { opacity: 1, transform: 'none' }], { duration: 500, delay: 200, easing: EASE, fill: 'backwards' });
+            const bar = yr.querySelector('.tl-ul');
+            if (bar) bar.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: 550, delay: 400, easing: EASE, fill: 'backwards' });
         }));
     }, { threshold: 0.6 });
     io.observe(title);

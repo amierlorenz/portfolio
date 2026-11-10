@@ -597,6 +597,9 @@ button { font: inherit; }
 .tl-word { display: inline-block; white-space: nowrap; cursor: pointer; }
 .tl-word:focus-visible { outline: 2px solid #222; outline-offset: 4px; border-radius: 4px; }
 .tl-word[data-lead] { cursor: default; }
+.tl-title { position: relative; }
+.tl-word.tl-wait { display: none; } /* year phrase, until the intro roll lands */
+.tl-ghost { position: absolute; margin: 0; white-space: nowrap; pointer-events: none; } /* fading copy of a word that changed lines */
 .tl-slot { display: inline-block; height: 1.2em; margin: -.125em 0; overflow: hidden; vertical-align: 0; transition: width .6s cubic-bezier(.22,.8,.2,1); }
 .tl-reel { display: flex; flex-direction: column; }
 .tl-sw { display: block; position: relative; height: 1.2em; line-height: 1.2; white-space: nowrap; width: max-content; }
