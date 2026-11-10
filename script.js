@@ -98,7 +98,9 @@ function setupPillars() {
 
     // While a card is hovered the others fade toward the white background;
     // on leave the last hovered card stays expanded and colors come back.
-    const setHovering = (on) => grid.classList.toggle('is-hovering', on && canAnimate());
+    // Only on devices that can hover: a tap fires mouseenter but no mouseleave, so the dim would stick.
+    const canHover = window.matchMedia('(hover: hover)');
+    const setHovering = (on) => grid.classList.toggle('is-hovering', on && canAnimate() && canHover.matches);
 
     cards.forEach((card, i) => {
         card.addEventListener('mouseenter', () => { idx = i; setHovering(true); apply(); });
