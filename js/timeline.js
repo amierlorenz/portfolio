@@ -1,11 +1,13 @@
-// ============ Timeline ("What I've done") ============
-// Title reads "What I've <type> <year>". Both words are slot-machine reels: the type word rolls
-// once when the section first comes into view and lands on "done"; clicking it steps
-// built → learned → taught → (Where I've) worked → done, and clicking the grey year steps
-// so far → this year → in 2025 → … → so far. Each step filters the timeline, with items sliding into place.
-// A finished year takes the past tense ("What I did in 2025"), so "I've" and "done" roll too.
+// ============ Timeline ("What I'm doing right now") ============
+// Title reads "What I'm <type> <when>". Both words are slot-machine reels: the type word rolls
+// once when the section first comes into view and lands on "doing"; clicking it steps
+// building → learning → teaching → (Where I'm) working → doing, and clicking the grey phrase steps
+// right now → so far → this year → in 2025 → … → right now. Each step filters the timeline, with items sliding into place.
+// "right now" shows only ongoing items, in the present progressive ("What I'm building");
+// "so far" and this year take the present perfect ("What I've built"); a finished year takes the
+// past tense ("What I did in 2025"). "I'm"/"I've"/"I" and the verb roll to match.
 // The entries themselves live in data/timeline.js.
-import { ITEMS } from '../data/timeline.js?v=20261110b';
+import { ITEMS } from '../data/timeline.js?v=20261110c';
 
 export function setupTimeline() {
     const section = document.getElementById('timeline');
@@ -14,10 +16,10 @@ export function setupTimeline() {
     const scroller = section.querySelector('.tl-scroller');
 
     const TYPES = {
-        project: { color: '#ffd55b', verb: 'built' },
-        learning: { color: '#4cc6ce', verb: 'learned' },
-        teaching: { color: '#a28ff0', verb: 'taught' },
-        work: { color: '#ff7e59', verb: 'worked', lead: 'Where' }, // paid roles only
+        project: { color: '#ffd55b', verb: 'built', ing: 'building' },
+        learning: { color: '#4cc6ce', verb: 'learned', ing: 'learning' },
+        teaching: { color: '#a28ff0', verb: 'taught', ing: 'teaching' },
+        work: { color: '#ff7e59', verb: 'worked', ing: 'working', lead: 'Where' }, // paid roles only
     };
     const STEP = ['project', 'learning', 'teaching', 'work']; // click order; matches the hero
     const NOW_YEAR = new Date().getFullYear(); // the visitor's clock: "this year", the past tense and the "now" ring follow it
@@ -32,33 +34,36 @@ export function setupTimeline() {
     const monthIdx = (ym) => (+ym.slice(0, 4)) * 12 + (+ym.slice(5)) - 1;
     const startYear = (it) => +it.start.slice(0, 4);
     const endYear = (it) => (it.end ? (it.end === 'now' ? NOW_YEAR : +it.end.slice(0, 4)) : startYear(it));
-    const inYear = (it, y) => !y || (startYear(it) <= y && endYear(it) >= y); // ongoing items count every year they ran
+    // year: 'now' = ongoing items only, null = everything, a number = that year (ongoing items count every year they ran)
+    const inYear = (it, y) => !y || (y === 'now' ? it.end === 'now' : startYear(it) <= y && endYear(it) >= y);
     const YEARS = [...new Set(ITEMS.flatMap((it) => Array.from({ length: endYear(it) - startYear(it) + 1 }, (_, i) => startYear(it) + i)))].sort((a, b) => b - a);
+    const WHEN = ['now', null, ...YEARS]; // click order of the grey phrase; the first is the default
 
     let type = null;   // null = everything
-    let year = null;   // null = all years
+    let year = WHEN[0];
     let introDone = false;
     let rollingType = false, rollingYear = false;
 
     const hasItems = (t, y) => ITEMS.some((it) => (!t || it.type === t) && inYear(it, y));
     const visible = () => ITEMS.filter((it) => (!type || it.type === type) && inYear(it, year)).sort((a, b) => monthIdx(a.start) - monthIdx(b.start));
-    // Present perfect for "so far" and the current year; simple past for a year that's over.
-    // Only "I've" → "I" and "done" → "did" change: built, learned, taught and worked read the same.
-    const past = (y) => !!y && y < NOW_YEAR;
-    const verbOf = (t, y) => (t ? TYPES[t].verb : past(y) ? 'did' : 'done');
-    const auxOf = (y) => (past(y) ? 'I' : "I've");
+    // Present progressive for "right now"; present perfect for "so far" and the current year;
+    // simple past for a year that's over. Past and perfect differ only in "I've" → "I" and "done" → "did":
+    // built, learned, taught and worked read the same.
+    const past = (y) => typeof y === 'number' && y < NOW_YEAR;
+    const verbOf = (t, y) => (y === 'now' ? (t ? TYPES[t].ing : 'doing') : t ? TYPES[t].verb : past(y) ? 'did' : 'done');
+    const auxOf = (y) => (y === 'now' ? "I'm" : past(y) ? 'I' : "I've");
     const leadOf = (t) => (t && TYPES[t].lead) || 'What';
-    const yearPhrase = (y) => (!y ? 'so far' : y === NOW_YEAR ? 'this year' : `in ${y}`);
+    const yearPhrase = (y) => (y === 'now' ? 'right now' : !y ? 'so far' : y === NOW_YEAR ? 'this year' : `in ${y}`);
     const colorOf = (w) => {
-        if (w === 'so far' || w === 'this year' || /^in \d{4}$/.test(w)) return GREY;
-        const t = STEP.find((k) => TYPES[k].verb === w);
+        if (w === 'right now' || w === 'so far' || w === 'this year' || /^in \d{4}$/.test(w)) return GREY;
+        const t = STEP.find((k) => TYPES[k].verb === w || TYPES[k].ing === w);
         return t ? TYPES[t].color : '#222';
     };
 
     // ---- title ----
     const staticSlot = (w, underline) => `<span class="tl-slot"><span class="tl-reel"><span class="tl-sw" style="color:${colorOf(w)}">${w}${underline ? `<span class="tl-ul" style="background:${colorOf(w)}"></span>` : ''}</span></span></span>`;
     const reelSlot = (words) => `<span class="tl-slot"><span class="tl-reel">${words.map((w) => `<span class="tl-sw" style="color:${colorOf(w)}">${w}</span>`).join('')}</span></span>`;
-    const INTRO = ['built', 'learned', 'taught', 'built', 'learned', 'taught', 'built', 'learned', 'taught', 'done'];
+    const INTRO = ['building', 'learning', 'teaching', 'building', 'learning', 'teaching', 'building', 'learning', 'teaching', 'doing'];
 
     // Until the intro has run, the verb is the reel and the year phrase waits out of the layout
     // (it's revealed once the reel lands, so it never has to hop lines while the reel resizes).
@@ -217,10 +222,10 @@ export function setupTimeline() {
     function stepYear() {
         if (rollingYear) return;
         const from = yearPhrase(year), fromAux = auxOf(year), fromVerb = verbOf(type, year);
-        let i = year ? YEARS.indexOf(year) : -1;
-        do { i = i + 1 >= YEARS.length ? -1 : i + 1; } while (i >= 0 && !hasItems(type, YEARS[i]));
-        const next = i < 0 ? null : YEARS[i];
-        // "done" ↔ "did" rolls the type reel too, so wait out a type roll that's still spinning
+        let i = WHEN.indexOf(year);
+        do { i = (i + 1) % WHEN.length; } while (i > 0 && !hasItems(type, WHEN[i])); // skip empty combinations; "right now" always has items
+        const next = WHEN[i];
+        // a tense change ("building" ↔ "built", "done" ↔ "did") rolls the type reel too, so wait out a type roll that's still spinning
         if (rollingType && verbOf(type, next) !== fromVerb) return;
         year = next;
         rollingYear = true;
@@ -244,11 +249,11 @@ export function setupTimeline() {
     title.addEventListener('keydown', activate);
 
     // ---- timeline ----
-    const showsNow = () => !year || year === NOW_YEAR;
+    const showsNow = () => typeof year !== 'number' || year === NOW_YEAR;
     function timelineHTML(list) {
         const groups = [];
         list.forEach((it) => {
-            const key = year ? String(year) : it.start.slice(0, 4);
+            const key = typeof year === 'number' ? String(year) : it.start.slice(0, 4); // "right now" and "so far" group by start year
             let g = groups[groups.length - 1];
             if (!g || g.key !== key) groups.push(g = { key, items: [] });
             g.items.push(it);

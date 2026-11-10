@@ -1,4 +1,4 @@
-/* ============ Timeline ("What I've done") ============ */
+/* ============ Timeline ("What I'm doing right now") ============ */
 .timeline { padding: clamp(56px, 10vw, 120px) 0; background: #fff; }
 .tl-head { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
 .tl-title { margin: 0; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(52px, 6.4vw, 96px); line-height: .95; position: relative; }

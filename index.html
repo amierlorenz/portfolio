@@ -14,16 +14,16 @@
     <!-- Fonts: Instrument Serif (display), Rubik (body), Fira Code (mono); Rubik + Fira Code match the digital garden -->
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Rubik:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <!-- One stylesheet per section, each with its own phone rules; base first. ?v= busts phone caches after a deploy (see js/main.js) -->
-    <link rel="stylesheet" href="css/base.css?v=20261110b">
-    <link rel="stylesheet" href="css/nav.css?v=20261110b">
-    <link rel="stylesheet" href="css/hero.css?v=20261110b">
-    <link rel="stylesheet" href="css/about.css?v=20261110b">
-    <link rel="stylesheet" href="css/projects.css?v=20261110b">
-    <link rel="stylesheet" href="css/timeline.css?v=20261110b">
-    <link rel="stylesheet" href="css/timeline-graph.css?v=20261110b">
-    <link rel="stylesheet" href="css/skills.css?v=20261110b">
-    <link rel="stylesheet" href="css/contact.css?v=20261110b">
-    <script type="module" src="js/main.js?v=20261110b"></script>
+    <link rel="stylesheet" href="css/base.css?v=20261110c">
+    <link rel="stylesheet" href="css/nav.css?v=20261110c">
+    <link rel="stylesheet" href="css/hero.css?v=20261110c">
+    <link rel="stylesheet" href="css/about.css?v=20261110c">
+    <link rel="stylesheet" href="css/projects.css?v=20261110c">
+    <link rel="stylesheet" href="css/timeline.css?v=20261110c">
+    <link rel="stylesheet" href="css/timeline-graph.css?v=20261110c">
+    <link rel="stylesheet" href="css/skills.css?v=20261110c">
+    <link rel="stylesheet" href="css/contact.css?v=20261110c">
+    <script type="module" src="js/main.js?v=20261110c"></script>
 </head>
 <body>
     <div class="page">
@@ -35,8 +35,8 @@
                 </a>
                 <div class="nav-links">
                     <a href="#about" class="nav-link">About</a>
-                    <a href="#projects" class="nav-link">Projects</a>
                     <a href="#timeline" class="nav-link">Timeline</a>
+                    <a href="#projects" class="nav-link">Projects</a>
                     <a href="#skills" class="nav-link">Skills</a>
                     <a href="resume.pdf" class="nav-link" target="_blank" rel="noopener">Resume</a>
                 </div>
@@ -60,8 +60,8 @@
         <nav id="mobile-menu" class="mobile-menu" aria-label="Menu">
             <ul class="mobile-menu-list">
                 <li><a href="#about" style="--i:0">About</a></li>
-                <li><a href="#projects" style="--i:1">Projects</a></li>
-                <li><a href="#timeline" style="--i:2">Timeline</a></li>
+                <li><a href="#timeline" style="--i:1">Timeline</a></li>
+                <li><a href="#projects" style="--i:2">Projects</a></li>
                 <li><a href="#skills" style="--i:3">Skills</a></li>
                 <li><a href="#contact" style="--i:4">Contact</a></li>
             </ul>
@@ -103,36 +103,19 @@
                         <p class="about-lede">
                             I'm a Computer Science student at Hampton University with a focus on AI/ML.
                             Currently learning how to contribute to Open Source through CodePath AI301,
-                            and teaching Swift through Outreach @ HU.
+                            and teaching Swift through the HU Swift Academy.
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="about-pillars">
-                <div id="pillar-grid" data-reveal>
-                    <div class="pillar-card pillar--red" tabindex="0">
-                        <span class="pillar-num">01</span>
-                        <div class="pillar-body">
-                            <h3 class="pillar-title">What I'm building</h3>
-                            <p class="pillar-text">Swift apps for iPhone &amp; Mac and Claude Code tools.</p>
-                        </div>
-                    </div>
-                    <div class="pillar-card pillar--cyan" tabindex="0">
-                        <span class="pillar-num">02</span>
-                        <div class="pillar-body">
-                            <h3 class="pillar-title">What I'm learning</h3>
-                            <p class="pillar-text">CS (AI/ML) at Hampton University, Class of '28, and open source contributions through CodePath AI301.</p>
-                        </div>
-                    </div>
-                    <div class="pillar-card pillar--yellow" tabindex="0">
-                        <span class="pillar-num">03</span>
-                        <div class="pillar-body">
-                            <h3 class="pillar-title">What I'm teaching</h3>
-                            <p class="pillar-text">Swift through Apple-sponsored Outreach @ HU and SWE workshops for ACM peers.</p>
-                        </div>
-                    </div>
-                </div>
+        </section>
+
+        <!-- Timeline: title and entries are built by js/timeline.js from data/timeline.js -->
+        <section id="timeline" class="timeline" data-bg="#FFFFFF">
+            <div class="tl-head">
+                <h2 class="tl-title" aria-live="polite">What I'm doing right now</h2>
             </div>
+            <div class="tl-scroller" tabindex="0" aria-label="Timeline of work, projects, learning and teaching. Scroll sideways."></div>
         </section>
 
         <section id="projects" class="projects" data-bg="#F5F5F5">
@@ -180,14 +163,6 @@
             <div class="work-progress-wrap">
                 <div class="work-progress"><div id="work-progress-fill"></div></div>
             </div>
-        </section>
-
-        <!-- Timeline: title and entries are built by js/timeline.js from data/timeline.js -->
-        <section id="timeline" class="timeline" data-bg="#FFFFFF">
-            <div class="tl-head">
-                <h2 class="tl-title" aria-live="polite">What I've done so far</h2>
-            </div>
-            <div class="tl-scroller" tabindex="0" aria-label="Timeline of work, projects, learning and teaching. Scroll sideways."></div>
         </section>
 
         <section id="skills" class="skills" data-bg="#FFFFFF">

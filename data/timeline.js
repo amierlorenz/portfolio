@@ -19,6 +19,6 @@ export const ITEMS = [
     { start: '2026-09', end: 'now', type: 'work', title: 'Google REACH: SafeGenAI', org: 'Research Assistant', text: 'Researching how to teach non-technical audiences to use GenAI safely and responsibly.' },
     { start: '2026-09', end: 'now', type: 'learning', title: 'CodePath AI301', org: 'Open Source Contributions with GenAI', text: 'Making contributions to open source and building Claude Code skills to support them.' },
     { start: '2026-09', end: 'now', type: 'project', title: 'Mieracle Study', org: 'iPhone + Mac App', text: 'Spaced repetition with on-device AI grading and live exam dates from the Canvas LMS API.' },
-    { start: '2026-10', end: 'now', type: 'teaching', title: 'HU Swift Academy', org: 'Swift Outreach Scholar', text: 'Teaching Swift to K-12 students, teachers, and community groups.' },
+    { start: '2026-10', end: 'now', type: 'teaching', title: 'HU Swift Academy', org: 'Swift Outreach Scholar', text: 'Teaching Swift to K-12 students, teachers, and community groups through an Apple-sponsored outreach program.' },
     { start: '2026-10', end: 'now', type: 'project', title: 'Claude Code plugins & skills', org: 'Open Source', text: 'A plugin marketplace including skills and plugins to foster healthy AI use in development.' },
 ];
