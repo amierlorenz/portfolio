@@ -10,9 +10,14 @@ document.addEventListener('click', (e) => {
     if (!target) return;
     e.preventDefault();
     let top = target.offsetTop - 84;
-    // About: scroll just far enough that the cards are fully on screen, keeping as much of the intro band as possible
-    const fit = target.id === 'about' && document.getElementById('pillar-grid');
-    if (fit) top = Math.max(top, fit.getBoundingClientRect().bottom + window.scrollY - window.innerHeight + 24);
+    // About: scroll just far enough that the cards are fully on screen, keeping as much of the intro band as possible.
+    // Only when the cards can fit under the nav at all: stacked on phones they're taller than the screen,
+    // so there it stops on the intro band ("Hi, I'm Amier") instead of running down to the last card.
+    const grid = target.id === 'about' && document.getElementById('pillar-grid');
+    if (grid) {
+        const r = grid.getBoundingClientRect();
+        if (r.height + 84 + 24 <= window.innerHeight) top = Math.max(top, r.bottom + window.scrollY - window.innerHeight + 24);
+    }
     window.scrollTo({ top, behavior: 'smooth' });
 });
 
