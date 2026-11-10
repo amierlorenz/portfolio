@@ -1,0 +1,67 @@
+/* ============ Timeline ("What I've done") ============ */
+.timeline { padding: clamp(56px, 10vw, 120px) 0; background: #fff; }
+.tl-head { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+.tl-title { margin: 0; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(52px, 6.4vw, 96px); line-height: .95; position: relative; }
+
+/* Native horizontal scroll only: no wheel handler, so the page always scrolls vertically */
+.tl-scroller {
+    margin-top: clamp(32px, 4vw, 48px);
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #222 #EEE;
+    padding: 0 24px 22px max(24px, calc((100vw - 1180px) / 2));
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+}
+.tl-scroller:focus-visible { outline: 2px solid #222; outline-offset: -2px; }
+.tl-scroller::-webkit-scrollbar { height: 6px; }
+.tl-scroller::-webkit-scrollbar-track { background: #EEE; border-radius: 3px; }
+.tl-scroller::-webkit-scrollbar-thumb { background: #222; border-radius: 3px; }
+
+.tl { position: relative; display: flex; width: max-content; }
+.tl-line { position: absolute; height: 1px; background: #222; transform-origin: left center; pointer-events: none; }
+.tl-grp { display: flex; flex-direction: column; gap: 18px; }
+.tl-grp + .tl-grp { border-left: 1px solid #E6E6E6; }
+/* Year heading sticks to the left edge while its year is in view */
+.tl-grp > h3 {
+    position: sticky; left: 24px; align-self: flex-start; width: max-content;
+    margin: 0; padding: 0 24px 0 16px;
+    background: linear-gradient(90deg, #fff 85%, transparent);
+    font-family: 'Instrument Serif', serif; font-weight: 400;
+    font-size: clamp(64px, 8vw, 120px); line-height: .85; color: #222;
+}
+.tl-row { display: flex; }
+.tl-it { flex: 0 0 300px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding: 0 16px; transition: opacity .5s ease; }
+@media (hover: hover) { .tl:hover .tl-it:not(:hover) { opacity: .3; } }
+.tl-dot { width: 17px; height: 17px; border-radius: 50%; position: relative; }
+.tl-when, .tl-org { font-family: 'Fira Code', monospace; font-size: 13px; line-height: 1.5; color: #666; }
+.tl-when { margin-top: 6px; }
+.tl-org { color: #222; }
+.tl-it h4 { margin: 0; font-family: 'Instrument Serif', serif; font-weight: 400; line-height: 1; font-size: clamp(32px, 3vw, 42px); }
+.tl-it p { margin: 0; font-size: 15px; line-height: 1.5; color: #444; text-wrap: pretty; max-width: 260px; }
+
+/* "now" closes the line */
+.tl-now { flex: 0 0 140px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding-left: 24px; }
+.tl-ring { width: 17px; height: 17px; border-radius: 50%; box-sizing: border-box; border: 2px solid #222; background: #fff; position: relative; }
+.tl-ring::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 1px solid #222; opacity: 0; animation: tlPulse 2.4s ease-out infinite; }
+@keyframes tlPulse { 0% { transform: scale(.6); opacity: .5; } 100% { transform: scale(1.5); opacity: 0; } }
+.tl-now-label { font-family: 'Fira Code', monospace; font-size: 13px; color: #222; margin-top: 6px; }
+
+/* Title words: slot-machine reels. Clipped to 1.2em for the glyphs, but negative margins
+   keep the box at the title's line height; JS lines up the baselines. */
+.tl-word { display: inline-block; white-space: nowrap; cursor: pointer; }
+.tl-word:focus-visible { outline: 2px solid #222; outline-offset: 4px; border-radius: 4px; }
+.tl-word[data-lead] { cursor: default; }
+.tl-word.tl-wait { display: none; } /* year phrase, until the intro roll lands */
+.tl-ghost { position: absolute; margin: 0; white-space: nowrap; pointer-events: none; } /* fading copy of a word that changed lines */
+.tl-slot { display: inline-block; height: 1.2em; margin: -.125em 0; overflow: hidden; vertical-align: 0; transition: width .6s cubic-bezier(.22,.8,.2,1); }
+.tl-reel { display: flex; flex-direction: column; }
+.tl-sw { display: block; position: relative; height: 1.2em; line-height: 1.2; white-space: nowrap; width: max-content; }
+.tl-ul { position: absolute; left: 0; right: 0; height: max(2px, .045em); border-radius: 1px; transform-origin: left center; }
+.tl-word[data-year] .tl-sw, .tl-word[data-year] .tl-ul { transition: color .25s ease, background-color .25s ease; }
+@media (hover: hover) {
+    .tl-word[data-year]:hover .tl-sw { color: #8c8c8c !important; }
+    .tl-word[data-year]:hover .tl-ul { background: #8c8c8c !important; }
+}

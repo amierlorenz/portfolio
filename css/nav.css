@@ -1,0 +1,70 @@
+/* ============ Nav pill ============ */
+/* Fixed, frosted pill: avatar, links, "Get In Touch". On phones (≤760px) the links give way to the menu button. */
+.site-header { position: fixed; top: 16px; left: 16px; right: 16px; z-index: 40; display: flex; justify-content: center; transform: translateY(0); transition: transform .5s cubic-bezier(.22,.8,.2,1); }
+.nav-pill { width: 100%; max-width: 1180px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 12px 10px 10px; border-radius: 999px; position: relative; isolation: isolate; }
+.nav-glass { position: absolute; inset: 0; border-radius: 999px; background: rgba(255,255,255,.75); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); z-index: -1; pointer-events: none; }
+.nav-home { display: flex; align-items: center; opacity: 1; transition: opacity .3s ease; }
+.nav-home .avatar { width: 44px; height: 44px; }
+
+/* Nav: neutral dim on hover instead of the cyan link color */
+.nav-link { padding: 8px 12px; opacity: 1; transition: opacity .6s cubic-bezier(.22,.8,.2,1); }
+@media (hover: hover) {
+    .nav-link:hover { color: #222; opacity: .55; }
+    .nav-cta:hover { color: #fff; opacity: .8; }
+}
+.nav-links { display: flex; align-items: center; gap: clamp(2px, 1.2vw, 14px); font-size: 15px; font-weight: 400; line-height: 1.4; }
+.nav-actions { display: flex; align-items: center; gap: 8px; }
+
+.nav-cta { background: #222; color: #fff; padding: 12px 22px; border-radius: 999px; font-size: 16px; font-weight: 600; line-height: 1.25; transition: background-color .4s ease, color .4s ease, opacity .4s ease; display: block; }
+.nav-cta-wrap { display: block; height: 1.25em; line-height: 1.25em; overflow: hidden; }
+.nav-cta-roll { display: flex; flex-direction: column; transform: translateY(0); transition: transform .5s cubic-bezier(.65,0,.25,1); }
+
+/* ============ Phone menu (≤760px) ============ */
+/* The pill keeps the avatar and a menu button; the button opens a full-screen overlay
+   that sits just under the pill (z-index 39 vs the header's 40), so the button stays on top as the close X. */
+.menu-btn { display: none; place-items: center; width: 44px; height: 44px; flex: none; border: 0; border-radius: 999px; background: #222; color: #fff; cursor: pointer; }
+.menu-btn span { grid-area: 1 / 1; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .4s cubic-bezier(.65,0,.25,1); }
+.menu-btn span:first-child { transform: translateY(-4px); }
+.menu-btn span:last-child { transform: translateY(4px); }
+.menu-btn[aria-expanded="true"] span:first-child { transform: rotate(45deg); }
+.menu-btn[aria-expanded="true"] span:last-child { transform: rotate(-45deg); }
+
+.mobile-menu { display: none; }
+
+@media (max-width: 760px) {
+    .nav-links, .nav-actions { display: none; }
+    .menu-btn { display: grid; }
+
+    .mobile-menu {
+        position: fixed; inset: 0; z-index: 39;
+        display: flex; flex-direction: column;
+        padding: 112px 28px calc(32px + env(safe-area-inset-bottom));
+        background: #F5F5F5;
+        overflow-y: auto;
+        opacity: 0; visibility: hidden;
+        transition: opacity .35s ease, visibility 0s .45s;
+    }
+    .mobile-menu.is-open { opacity: 1; visibility: visible; transition: opacity .35s ease; }
+}
+
+/* Each link's --i (set in the HTML) staggers its entrance */
+.mobile-menu-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.mobile-menu-list a {
+    display: block;
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(48px, 14vw, 64px);
+    line-height: 1.05;
+    opacity: 0; translate: 0 18px;
+    transition: translate .5s cubic-bezier(.22,.8,.2,1), opacity .4s ease;
+}
+.mobile-menu.is-open .mobile-menu-list a { opacity: 1; translate: 0 0; transition-delay: calc(var(--i) * 45ms + 80ms); }
+
+.mobile-menu-resume {
+    margin-top: auto;
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    padding: 18px 24px;
+    border-radius: 999px;
+    background: #ffd55b; color: #222;
+    font-size: 16px; font-weight: 600; line-height: 1.25;
+}
+@media (hover: hover) { .mobile-menu-resume:hover { color: #222; opacity: .8; } }

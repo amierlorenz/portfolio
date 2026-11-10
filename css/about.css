@@ -1,0 +1,111 @@
+/* ============ About ============ */
+.about { padding: 0 0 clamp(56px, 10vw, 120px); }
+
+/* ---- Intro band: yellow, photo standing on the band's bottom edge ---- */
+.about-band { background: #ffd55b; padding: clamp(32px, 4vw, 48px) 24px 0; }
+
+.about-band-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(240px, 340px) 1fr;
+    gap: clamp(24px, 5vw, 64px);
+    align-items: end;
+}
+
+/* Bottom of the photo sits flush on the band's edge */
+.about-band-inner img { display: block; width: 100%; height: auto; }
+
+.about-band-text {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    color: #222;
+    padding-bottom: clamp(24px, 4vw, 48px);
+}
+.about-title { margin: 0; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(48px, 5.6vw, 84px); line-height: .95; }
+.about-lede { margin: 0; font-size: clamp(18px, 1.6vw, 20px); line-height: 1.5; text-wrap: pretty; max-width: 460px; }
+
+/* ---- Pillar cards: the hovered/focused one widens (js/card-grids.js) ---- */
+.about-pillars { max-width: 1180px; margin: clamp(24px, 3vw, 40px) auto 0; padding: 0 24px; }
+
+#pillar-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    height: clamp(320px, 28vw, 360px);
+    transition: grid-template-columns .7s cubic-bezier(.22,.8,.2,1);
+}
+
+.pillar-card {
+    all: unset;
+    box-sizing: border-box;
+    min-width: 0;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 28px;
+    padding: clamp(28px, 3vw, 36px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    color: #222;
+    transition: opacity .5s ease;
+}
+
+#pillar-grid.is-hovering .pillar-card:not(.is-active) { opacity: .3; }
+
+.pillar-num { font-family: 'Fira Code', monospace; font-size: 14px; line-height: 1.5; }
+
+.pillar-body { display: flex; flex-direction: column; gap: 14px; }
+
+.pillar-title {
+    margin: 0;
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(36px, 3.6vw, 48px);
+    line-height: 1;
+    min-height: 2em;
+    text-wrap: balance;
+}
+
+.pillar-text {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    text-wrap: pretty;
+    /* Mask reveal: fixed width + height so the text never reflows; the card's
+       overflow:hidden edge uncovers it as the column widens, while it fades in. */
+    width: min(380px, 60vw);
+    height: 4.5em;
+    opacity: 0;
+    transition: opacity .5s ease;
+}
+
+.pillar-card.is-active .pillar-text { opacity: 1; }
+
+/* Digital-garden palette (from mieracle.com) */
+/* White cards, colored text. Deeper shades of the palette so the text stays readable on white:
+   --c for the number and title (large text, >= 3:1); descriptions stay #222. */
+.pillar--red, .pillar--cyan, .pillar--yellow { background: #fff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); color: var(--c); }
+.pillar--red { --c: #e0582f; }
+.pillar--cyan { --c: #2a9ea6; }
+.pillar--yellow { --c: #b38500; }
+.pillar-card .pillar-text { color: #222; }
+
+/* ---- Phones ---- */
+@media (max-width: 760px) {
+    .about-band-inner { grid-template-columns: 1fr; }
+    .about-band-text { order: -1; padding-bottom: 0; }
+    /* nudged right: the photo's shadow sits on its right side, so centering the box leaves the face left of center */
+    .about-band-inner img { max-width: 360px; margin: 0 auto; translate: 10% 0; }
+
+    /* cards stack, all text shown */
+    #pillar-grid { grid-template-columns: 1fr !important; height: auto; }
+    .pillar-card { gap: 24px; min-height: 260px; }
+    .pillar-title { min-height: 0; }
+    .pillar-text { width: auto; height: auto; opacity: 1; }
+}
