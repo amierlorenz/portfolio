@@ -2,7 +2,7 @@
 // Title reads "What I've <type> <year>". Both words are slot-machine reels: the type word rolls
 // once when the section first comes into view and lands on "done"; clicking it steps
 // built → learned → taught → (Where I've) worked → done, and clicking the grey year steps
-// so far → in 2026 → … → so far. Each step filters the timeline, with items sliding into place.
+// so far → this year → in 2025 → … → so far. Each step filters the timeline, with items sliding into place.
 // A finished year takes the past tense ("What I did in 2025"), so "I've" and "done" roll too.
 // The entries themselves live in data/timeline.js.
 import { ITEMS } from '../data/timeline.js?v=20261109b';
@@ -48,9 +48,9 @@ export function setupTimeline() {
     const verbOf = (t, y) => (t ? TYPES[t].verb : past(y) ? 'did' : 'done');
     const auxOf = (y) => (past(y) ? 'I' : "I've");
     const leadOf = (t) => (t && TYPES[t].lead) || 'What';
-    const yearPhrase = (y) => (y ? `in ${y}` : 'so far');
+    const yearPhrase = (y) => (!y ? 'so far' : y === NOW_YEAR ? 'this year' : `in ${y}`);
     const colorOf = (w) => {
-        if (w === 'so far' || /^in \d{4}$/.test(w)) return GREY;
+        if (w === 'so far' || w === 'this year' || /^in \d{4}$/.test(w)) return GREY;
         const t = STEP.find((k) => TYPES[k].verb === w);
         return t ? TYPES[t].color : '#222';
     };
