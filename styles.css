@@ -520,7 +520,8 @@ button { font: inherit; }
 @media (max-width: 760px) {
     .about-band-inner { grid-template-columns: 1fr; }
     .about-band-text { order: -1; padding-bottom: 0; }
-    .about-band-inner img { max-width: 360px; margin: 0 auto; }
+    /* nudged right: the photo's shadow sits on its right side, so centering the box leaves the face left of center */
+    .about-band-inner img { max-width: 360px; margin: 0 auto; translate: 10% 0; }
 }
 
 /* ============ Timeline ("What I've done") ============ */
