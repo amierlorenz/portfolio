@@ -1,0 +1,3 @@
+[submodule "portfolio-archive"]
+	path = portfolio-archive
+	url = https://github.com/amierlorenz/portfolio-archive.git
