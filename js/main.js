@@ -8,7 +8,7 @@
 import { setupAnchors } from './anchors.js?v=20261110b';
 import { setupMobileMenu } from './mobile-menu.js?v=20261110b';
 import { setupReveal } from './reveal.js?v=20261110b';
-import { setupPillars, setupQuotes } from './card-grids.js?v=20261110b';
+import { setupQuotes } from './card-grids.js?v=20261110b';
 import { setupEmailPill } from './contact.js?v=20261110b';
 import { setupWorkRail } from './work-rail.js?v=20261110b';
 import { setupHeroFloat } from './hero.js?v=20261110b';
@@ -20,7 +20,6 @@ setupAnchors();
 document.addEventListener('DOMContentLoaded', () => {
     setupMobileMenu();
     setupReveal();
-    setupPillars();
     setupQuotes();
     setupEmailPill();
     setupWorkRail();
