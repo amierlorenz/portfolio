@@ -1,0 +1,132 @@
+/* ============ Contact (dark) + footer ============ */
+.contact-dark { background: #222; color: #fff; }
+.contact-inner { max-width: 1180px; margin: 0 auto; padding: clamp(64px, 10vw, 120px) 24px; display: flex; flex-direction: column; gap: clamp(48px, 6vw, 72px); }
+.contact-lede { color: #bbb; }
+.contact-pills { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ---- Expandable pills (Email / GitHub / Book a Chat) ---- */
+#email-container { position: relative; display: inline-block; }
+
+.email-pill {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    background: #222;
+    color: #fff;
+    border-radius: 999px;
+    padding: 12px 22px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+    cursor: pointer;
+    transition: background-color .4s ease, color .4s ease;
+}
+
+.email-pill:focus-visible { background: #3d3d3d; color: #fff; }
+@media (hover: hover) { .email-pill:hover { background: #3d3d3d; color: #fff; } }
+.email-pill.copied { background: #008060; color: #fff; }
+
+.email-word-wrap { display: block; height: 1.25em; line-height: 1.25em; overflow: hidden; }
+
+.email-reveal {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 0;
+    margin-left: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width .5s cubic-bezier(.65,0,.25,1), margin-left .5s cubic-bezier(.65,0,.25,1), opacity .35s ease .05s;
+}
+
+.email-pill:focus-visible .email-reveal,
+.email-pill.copied .email-reveal { max-width: 300px; margin-left: 10px; opacity: 1; }
+@media (hover: hover) { .email-pill:hover .email-reveal { max-width: 300px; margin-left: 10px; opacity: 1; } }
+
+.email-address { font-weight: 500; letter-spacing: .01em; }
+
+.email-icons { position: relative; width: 16px; height: 16px; flex: none; }
+
+.email-icons span {
+    position: absolute;
+    inset: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+.email-icon-check { opacity: 0; transform: scale(.5) rotate(-30deg); }
+.email-pill.copied .email-icon-copy { opacity: 0; transform: scale(.5); }
+.email-pill.copied .email-icon-check { opacity: 1; transform: none; }
+
+.email-icon-arrow svg { transition: transform .35s cubic-bezier(.22,.8,.2,1); }
+@media (hover: hover) { .email-pill:hover .email-icon-arrow svg { transform: translate(2px, -2px); } }
+
+/* Touch: no hover, so the icon (copy / ↗) shows all the time, without the address
+   (the full address beside "GitHub" won't fit one row on phones) and without animation. */
+@media (hover: none) {
+    .email-reveal { max-width: none; margin-left: 10px; opacity: 1; transition: none; }
+    .email-address { display: none; }
+}
+
+/* Copied confirmation bubble */
+.email-copied {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translate(-50%, 6px);
+    background: #222;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 6px 18px rgba(0,0,0,.18);
+    transition: opacity .25s ease, transform .25s ease;
+}
+
+.email-copied::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #222;
+}
+
+.email-pill.copied .email-copied { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---- Pills on the dark section (must come after the base pill rules) ---- */
+.contact-dark .email-pill { background: #fff; color: #222; }
+.contact-dark .email-pill:focus-visible { background: #ffd55b; color: #222; }
+@media (hover: hover) { .contact-dark .email-pill:hover { background: #ffd55b; color: #222; } }
+.contact-dark .email-pill.copied { background: #4cc6ce; color: #222; }
+
+.contact-dark .email-copied { background: #fff; color: #222; box-shadow: 0 6px 18px rgba(0,0,0,.4); }
+.contact-dark .email-copied::after { border-top-color: #fff; }
+
+/* ---- Footer ---- */
+.site-footer { border-top: 1px solid #444; }
+.site-footer-inner { max-width: 1180px; margin: 0 auto; padding: 36px 24px 48px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
+.footer-note { color: #999; font-size: 15px; line-height: 1.4; }
+.footer-heart { display: inline-block; vertical-align: -2px; }
+.footer-links { display: flex; gap: 20px; }
+
+.contact-dark .foot-link {
+    color: #999;
+    font-size: 15px;
+    line-height: 1.4;
+    text-decoration: underline dotted;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+    transition: color .4s ease;
+}
+
+@media (hover: hover) { .contact-dark .foot-link:hover { color: #4cc6ce; } }
