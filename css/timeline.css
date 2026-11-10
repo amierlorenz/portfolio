@@ -53,7 +53,7 @@
    keep the box at the title's line height; JS lines up the baselines. */
 .tl-word { display: inline-block; white-space: nowrap; cursor: pointer; }
 .tl-word:focus-visible { outline: 2px solid #222; outline-offset: 4px; border-radius: 4px; }
-.tl-word[data-lead] { cursor: default; }
+.tl-word[data-lead], .tl-word[data-aux] { cursor: default; } /* "What"/"Where" and "I've"/"I" follow the filters */
 .tl-word.tl-wait { display: none; } /* year phrase, until the intro roll lands */
 .tl-ghost { position: absolute; margin: 0; white-space: nowrap; pointer-events: none; } /* fading copy of a word that changed lines */
 .tl-slot { display: inline-block; height: 1.2em; margin: -.125em 0; overflow: hidden; vertical-align: 0; transition: width .6s cubic-bezier(.22,.8,.2,1); }

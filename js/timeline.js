@@ -2,9 +2,10 @@
 // Title reads "What I've <type> <year>". Both words are slot-machine reels: the type word rolls
 // once when the section first comes into view and lands on "done"; clicking it steps
 // built → learned → taught → (Where I've) worked → done, and clicking the grey year steps
-// so far → in 2026 → … → so far. Each step filters the timeline, with items sliding into place.
+// so far → this year → in 2025 → … → so far. Each step filters the timeline, with items sliding into place.
+// A finished year takes the past tense ("What I did in 2025"), so "I've" and "done" roll too.
 // The entries themselves live in data/timeline.js.
-import { ITEMS } from '../data/timeline.js?v=20261109b';
+import { ITEMS } from '../data/timeline.js?v=20261110b';
 
 export function setupTimeline() {
     const section = document.getElementById('timeline');
@@ -19,7 +20,7 @@ export function setupTimeline() {
         work: { color: '#ff7e59', verb: 'worked', lead: 'Where' }, // paid roles only
     };
     const STEP = ['project', 'learning', 'teaching', 'work']; // click order; matches the hero
-    const NOW_YEAR = 2026;
+    const NOW_YEAR = new Date().getFullYear(); // the visitor's clock: "this year", the past tense and the "now" ring follow it
     const GREY = '#b4b4b4';
     const EASE = 'cubic-bezier(.22,.8,.2,1)';
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -41,11 +42,15 @@ export function setupTimeline() {
 
     const hasItems = (t, y) => ITEMS.some((it) => (!t || it.type === t) && inYear(it, y));
     const visible = () => ITEMS.filter((it) => (!type || it.type === type) && inYear(it, year)).sort((a, b) => monthIdx(a.start) - monthIdx(b.start));
-    const verbOf = (t) => (t ? TYPES[t].verb : 'done');
+    // Present perfect for "so far" and the current year; simple past for a year that's over.
+    // Only "I've" → "I" and "done" → "did" change: built, learned, taught and worked read the same.
+    const past = (y) => !!y && y < NOW_YEAR;
+    const verbOf = (t, y) => (t ? TYPES[t].verb : past(y) ? 'did' : 'done');
+    const auxOf = (y) => (past(y) ? 'I' : "I've");
     const leadOf = (t) => (t && TYPES[t].lead) || 'What';
-    const yearPhrase = (y) => (y ? `in ${y}` : 'so far');
+    const yearPhrase = (y) => (!y ? 'so far' : y === NOW_YEAR ? 'this year' : `in ${y}`);
     const colorOf = (w) => {
-        if (w === 'so far' || /^in \d{4}$/.test(w)) return GREY;
+        if (w === 'so far' || w === 'this year' || /^in \d{4}$/.test(w)) return GREY;
         const t = STEP.find((k) => TYPES[k].verb === w);
         return t ? TYPES[t].color : '#222';
     };
@@ -59,8 +64,9 @@ export function setupTimeline() {
     // (it's revealed once the reel lands, so it never has to hop lines while the reel resizes).
     const introPending = () => !introDone && !reduceMotion;
     const titleHTML = (t, y, intro) =>
-        `<span class="tl-word" data-lead>${staticSlot(leadOf(t), false)}</span> I've ` +
-        `<span class="tl-word" data-type role="button" tabindex="0" aria-label="Filter by type">${intro ? reelSlot(INTRO) : staticSlot(verbOf(t), true)}</span> ` +
+        `<span class="tl-word" data-lead>${staticSlot(leadOf(t), false)}</span> ` +
+        `<span class="tl-word" data-aux>${staticSlot(auxOf(y), false)}</span> ` +
+        `<span class="tl-word" data-type role="button" tabindex="0" aria-label="Filter by type">${intro ? reelSlot(INTRO) : staticSlot(verbOf(t, y), true)}</span> ` +
         `<span class="tl-word${intro ? ' tl-wait' : ''}" data-year role="button" tabindex="0" aria-label="Filter by year">${staticSlot(yearPhrase(y), true)}</span>`;
 
     function renderTitle() {
@@ -159,7 +165,7 @@ export function setupTimeline() {
 
     // Spin `host`'s reel through `words`, land on the last one and draw its underline in.
     function roll(host, words, { duration, easing, glide }, done) {
-        const underline = !host.hasAttribute('data-lead');
+        const underline = host.hasAttribute('data-type') || host.hasAttribute('data-year'); // the clickable words
         const last = words[words.length - 1];
         if (reduceMotion) { host.innerHTML = staticSlot(last, underline); align(host); done && done(); return; }
         followWraps(true); // record where every word sits before the slot changes
@@ -198,24 +204,32 @@ export function setupTimeline() {
 
     function stepType() {
         if (!introDone || rollingType) return;
-        const fromVerb = verbOf(type), fromLead = leadOf(type);
+        const fromVerb = verbOf(type, year), fromLead = leadOf(type);
         let i = type ? STEP.indexOf(type) : -1;
         do { i = i + 1 >= STEP.length ? -1 : i + 1; } while (i >= 0 && !hasItems(STEP[i], year)); // skip empty combinations
         type = i < 0 ? null : STEP[i];
         rollingType = true;
-        roll(title.querySelector('[data-type]'), [fromVerb, verbOf(type)], STEP_ROLL, () => { rollingType = false; });
+        roll(title.querySelector('[data-type]'), [fromVerb, verbOf(type, year)], STEP_ROLL, () => { rollingType = false; });
         if (leadOf(type) !== fromLead) roll(title.querySelector('[data-lead]'), [fromLead, leadOf(type)], STEP_ROLL);
         glideHeight(STEP_ROLL);
         update();
     }
     function stepYear() {
         if (rollingYear) return;
-        const from = yearPhrase(year);
+        const from = yearPhrase(year), fromAux = auxOf(year), fromVerb = verbOf(type, year);
         let i = year ? YEARS.indexOf(year) : -1;
         do { i = i + 1 >= YEARS.length ? -1 : i + 1; } while (i >= 0 && !hasItems(type, YEARS[i]));
-        year = i < 0 ? null : YEARS[i];
+        const next = i < 0 ? null : YEARS[i];
+        // "done" ↔ "did" rolls the type reel too, so wait out a type roll that's still spinning
+        if (rollingType && verbOf(type, next) !== fromVerb) return;
+        year = next;
         rollingYear = true;
         roll(title.querySelector('[data-year]'), [from, yearPhrase(year)], STEP_ROLL, () => { rollingYear = false; });
+        if (auxOf(year) !== fromAux) roll(title.querySelector('[data-aux]'), [fromAux, auxOf(year)], STEP_ROLL);
+        if (verbOf(type, year) !== fromVerb) {
+            rollingType = true;
+            roll(title.querySelector('[data-type]'), [fromVerb, verbOf(type, year)], STEP_ROLL, () => { rollingType = false; });
+        }
         glideHeight(STEP_ROLL);
         update();
     }
