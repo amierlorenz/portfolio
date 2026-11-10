@@ -5,7 +5,7 @@
 // so far → this year → in 2025 → … → so far. Each step filters the timeline, with items sliding into place.
 // A finished year takes the past tense ("What I did in 2025"), so "I've" and "done" roll too.
 // The entries themselves live in data/timeline.js.
-import { ITEMS } from '../data/timeline.js?v=20261109b';
+import { ITEMS } from '../data/timeline.js?v=20261110b';
 
 export function setupTimeline() {
     const section = document.getElementById('timeline');
