@@ -4,7 +4,7 @@
 // built → learned → taught → (Where I've) worked → done, and clicking the grey year steps
 // so far → in 2026 → … → so far. Each step filters the timeline, with items sliding into place.
 // The entries themselves live in data/timeline.js.
-import { ITEMS } from '../data/timeline.js?v=20261109';
+import { ITEMS } from '../data/timeline.js?v=20261109b';
 
 export function setupTimeline() {
     const section = document.getElementById('timeline');

@@ -1,0 +1,47 @@
+/* ============ Timeline graph: branches over the timeline (js/timeline-graph.js) ============ */
+.tl svg.tlg-lines, .tl svg.tlg-top { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.tlg-lines path { fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tlg-lines path.tlg-main-tail { stroke-width: 1; }
+.tlg-lines.dim .tlg-br:not(.hot) { opacity: .15 !important; }
+.tlg-lines .tlg-br.hot path { stroke-width: 2.5; }
+
+/* The band above the line grows as branches rise (JS eases --tlg-pad) */
+.tl-row { padding-top: var(--tlg-pad, 0px); }
+
+/* Hidden toggle: a click strip over the line band */
+.tlg-hit { position: absolute; left: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.tlg-hit:focus-visible { outline: 2px solid #222; outline-offset: -2px; border-radius: 6px; }
+/* hovering the line band shouldn't dim the cards like hovering the timeline does */
+@media (hover: hover) { .tl:has(> .tlg-hit:hover) .tl-it { opacity: 1; } }
+
+/* Pins: a card click pins it; the rest dim, its date gets a chip that grows out of the text
+   (box-shadow spread, so nothing shifts) */
+.tl-it { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.tl.tlg-has-pin .tl-it:not(.tlg-pinned) { opacity: .3; }
+@media (hover: hover) { .tl.tlg-has-pin .tl-it:not(.tlg-pinned):hover { opacity: 1; } }
+.tl .tl-it.tlg-pinned { opacity: 1 !important; }
+.tl-it .tl-when { border-radius: 6px; background-color: transparent; box-shadow: 0 0 0 0 transparent; }
+.tl-it.tlg-pinned .tl-when { background-color: #f2f2f2; box-shadow: 0 0 0 6px #f2f2f2; color: #222; }
+
+/* End dates: on the date row where a branch merges, or at the end of a branch running past the year */
+.tlg-top .tlg-end { pointer-events: auto; cursor: pointer; }
+.tlg-top .tlg-end-hit { fill: transparent; }
+.tlg-top .tlg-end:hover .tlg-end-hit, .tlg-top .tlg-end.on .tlg-end-hit { fill: #f2f2f2; }
+.tlg-top .tlg-end-text { font: 13px 'Fira Code', monospace; fill: #666; text-anchor: middle; dominant-baseline: central; }
+.tlg-top .tlg-end.on .tlg-end-text { fill: #222; }
+.tlg-top .tlg-end-text.tlg-run { font-size: 12px; text-anchor: start; paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; }
+.tlg-top .tlg-end.on .tlg-end-text.tlg-run { stroke: #f2f2f2; }
+
+/* Edge tag: the pinned item's title while its card is out of view */
+.tlg-tag { all: unset; position: absolute; z-index: 2; height: 22px; padding: 0 10px; box-sizing: border-box; display: inline-flex; align-items: center;
+    border-radius: 999px; background: #fff; border: 1.5px solid var(--c); color: #222; cursor: pointer; white-space: nowrap;
+    font: 500 12px/1 'Fira Code', monospace; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+.tlg-tag[hidden] { display: none; }
+.tlg-tag:focus-visible { outline: 2px solid #222; outline-offset: 2px; }
+
+@media (prefers-reduced-motion: no-preference) {
+    /* margin-left: a gap widening to fit its end dates */
+    .tl-it, .tl-now { transition: opacity .5s ease, margin-left .6s cubic-bezier(.22,.8,.2,1); }
+    .tl-it .tl-when { transition: background-color .3s ease, box-shadow .35s cubic-bezier(.22,.8,.2,1), color .3s ease; }
+    .tlg-top .tlg-end-hit { transition: fill .3s ease; }
+}
