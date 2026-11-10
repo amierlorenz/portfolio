@@ -20,7 +20,7 @@ export function setupTimeline() {
         work: { color: '#ff7e59', verb: 'worked', lead: 'Where' }, // paid roles only
     };
     const STEP = ['project', 'learning', 'teaching', 'work']; // click order; matches the hero
-    const NOW_YEAR = 2026;
+    const NOW_YEAR = new Date().getFullYear(); // the visitor's clock: "this year", the past tense and the "now" ring follow it
     const GREY = '#b4b4b4';
     const EASE = 'cubic-bezier(.22,.8,.2,1)';
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
