@@ -7,7 +7,7 @@
 // "so far" and this year take the present perfect ("What I've built"); a finished year takes the
 // past tense ("What I did in 2025"). "I'm"/"I've"/"I" and the verb roll to match.
 // The entries themselves live in data/timeline.js.
-import { ITEMS } from '../data/timeline.js?v=20261110c';
+import { ITEMS } from '../data/timeline.js?v=20261112a';
 
 export function setupTimeline() {
     const section = document.getElementById('timeline');
