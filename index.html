@@ -39,17 +39,18 @@
                     <a href="#timeline" class="nav-link">Timeline</a>
                     <a href="#projects" class="nav-link">Projects</a>
                     <a href="#skills" class="nav-link">Skills</a>
-                    <a href="resume.pdf" class="nav-link" target="_blank" rel="noopener">Resume</a>
+                    <a href="#contact" class="nav-link">Get In Touch</a>
                 </div>
+                <!-- Twins of the hero links: hidden (is-out, inert) until the nav reaches the hero row,
+                     then they pop in (js/dock.js). Resume is a pill on desktop and a circle on phones. -->
                 <div class="nav-actions">
-                    <a href="#contact" class="nav-cta">
-                        <span class="nav-cta-wrap">
-                            <span class="nav-cta-roll">
-                                <span>Get In Touch</span>
-                                <span aria-hidden="true">Get In Touch</span>
-                            </span>
-                        </span>
-                    </a>
+                    <div class="nav-socials">
+                        <a class="social-btn social-btn--youtube dock-pop is-out" data-dock="youtube" href="https://www.youtube.com/@amierlorenz" target="_blank" rel="noopener" aria-label="YouTube" inert><svg width="22" height="22" aria-hidden="true"><use href="#yt-mark"/></svg></a>
+                        <a class="social-btn dock-pop is-out" data-dock="medium" href="https://blog.amierlorenz.com" target="_blank" rel="noopener" aria-label="Medium" inert><svg width="18" height="18" aria-hidden="true"><use href="#medium-mark"/></svg></a>
+                        <a class="social-btn dock-pop is-out" data-dock="github" href="https://github.com/amierlorenz" target="_blank" rel="noopener" aria-label="GitHub" inert><svg width="20" height="20" aria-hidden="true"><use href="#gh-mark"/></svg></a>
+                        <a class="social-btn nav-resume-circle dock-pop is-out" data-dock="resume" href="resume.pdf" download aria-label="Download resume" inert><svg width="18" height="18" aria-hidden="true"><use href="#download-icon"/></svg></a>
+                    </div>
+                    <a class="nav-resume dock-pop is-out" data-dock="resume" href="resume.pdf" download inert>Resume <svg width="18" height="18" aria-hidden="true"><use href="#download-icon"/></svg></a>
                 </div>
                 <button id="menu-button" class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
                     <span></span><span></span>

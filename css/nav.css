@@ -1,5 +1,6 @@
 /* ============ Nav pill ============ */
-/* Fixed, frosted pill: avatar, links, "Get In Touch". On phones (≤760px) the links give way to the menu button. */
+/* Fixed, frosted pill: avatar, section links, and the YouTube / Medium / GitHub / Resume buttons
+   that pop in from the hero (js/dock.js). On phones (≤760px) the links give way to the menu button. */
 .site-header { position: fixed; top: 16px; left: 16px; right: 16px; z-index: 40; display: flex; justify-content: center; transform: translateY(0); transition: transform .5s cubic-bezier(.22,.8,.2,1); }
 .nav-pill { width: 100%; max-width: 1180px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 12px 10px 10px; border-radius: 999px; position: relative; isolation: isolate; }
 .nav-glass { position: absolute; inset: 0; border-radius: 999px; background: rgba(255,255,255,.75); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); z-index: -1; pointer-events: none; }
@@ -10,17 +11,57 @@
 .nav-link { padding: 8px 12px; opacity: 1; transition: opacity .6s cubic-bezier(.22,.8,.2,1); }
 @media (hover: hover) {
     .nav-link:hover { color: #222; opacity: .55; }
-    .nav-cta:hover { color: #fff; opacity: .8; }
 }
 .nav-links { display: flex; align-items: center; gap: clamp(2px, 1.2vw, 14px); font-size: 15px; font-weight: 400; line-height: 1.4; }
-.nav-actions { display: flex; align-items: center; gap: 8px; }
 
-.nav-cta { background: #222; color: #fff; padding: 12px 22px; border-radius: 999px; font-size: 16px; font-weight: 600; line-height: 1.25; transition: background-color .4s ease, color .4s ease, opacity .4s ease; display: block; }
-.nav-cta-wrap { display: block; height: 1.25em; line-height: 1.25em; overflow: hidden; }
-.nav-cta-roll { display: flex; flex-direction: column; transform: translateY(0); transition: transform .5s cubic-bezier(.65,0,.25,1); }
+/* ---- Buttons: circles + Resume (look and hover in css/buttons.css) ---- */
+.nav-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+.nav-socials { display: flex; align-items: center; gap: 8px; }
+.social-btn {
+    display: grid; place-items: center;
+    width: 40px; height: 40px; flex: none;
+    border-radius: 999px;
+    background: #fff; color: #222;
+}
+.nav-resume {
+    display: flex; align-items: center; gap: 10px;
+    background: #222; color: #fff;
+    padding: 12px 22px; border-radius: 999px;
+    font-size: 16px; font-weight: 600; line-height: 1.25; white-space: nowrap;
+}
+.nav-resume-circle { display: none; }
+/* Keep the colours on hover (the global a:hover would turn them cyan) */
+@media (hover: hover) {
+    .social-btn:hover { color: #222; }
+    .nav-resume:hover { color: #fff; }
+}
+
+/* ---- Desktop: links centred until the buttons arrive, then they slide over ---- */
+/* Three columns: avatar | links (centred in what's left) | buttons. While nothing is docked the
+   button column is avatar-wide, so the links sit at the true centre; js/dock.js sets .nav-docked and
+   the column opens to its natural width (--open-w, measured by js/dock.js), pushing the links left.
+   Opening: the space opens, then the buttons pop in (--lead). Closing: they pop out, then it closes. */
+@media (min-width: 761px) {
+    .nav-pill { display: grid; grid-template-columns: auto 1fr auto; }
+    .nav-links { justify-self: center; }
+    .nav-actions { width: 44px; transition: width .55s cubic-bezier(.65,0,.25,1) .3s; }
+    .nav-docked .nav-actions { width: var(--open-w, auto); transition: width .55s cubic-bezier(.65,0,.25,1) 0s; }
+    .nav-actions .dock-pop:not(.is-out) { --lead: 260ms; }
+    .dock-instant .nav-actions { transition: none; }
+    /* Circles lift off the white bar with a soft shadow */
+    .social-btn { --base: 0 1px 2px rgba(0,0,0,.07), 0 4px 14px rgba(0,0,0,.10); }
+}
+/* Narrow desktop: five links, three circles and the Resume pill don't fit, so Resume becomes a circle */
+@media (min-width: 761px) and (max-width: 960px) {
+    .nav-resume { display: none; }
+    .nav-resume-circle { display: grid; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .nav-actions, .nav-docked .nav-actions { transition: none; }
+}
 
 /* ============ Phone menu (≤760px) ============ */
-/* The pill keeps the avatar and a menu button; the button opens a full-screen overlay
+/* The pill keeps the avatar, the circles and a menu button; the button opens a full-screen overlay
    that sits just under the pill (z-index 39 vs the header's 40), so the button stays on top as the close X. */
 .menu-btn { display: none; place-items: center; width: 44px; height: 44px; flex: none; border: 0; border-radius: 999px; background: #222; color: #fff; cursor: pointer; }
 .menu-btn span { grid-area: 1 / 1; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .4s cubic-bezier(.65,0,.25,1); }
@@ -32,8 +73,17 @@
 .mobile-menu { display: none; }
 
 @media (max-width: 760px) {
-    .nav-links, .nav-actions { display: none; }
+    .nav-links { display: none; }
     .menu-btn { display: grid; }
+
+    /* The circles fill the gap between the avatar and the menu button */
+    .nav-actions { flex: 1; justify-content: center; gap: 6px; }
+    .nav-socials { gap: 6px; }
+    .social-btn { width: 38px; height: 38px; }
+    .nav-resume { display: none; }
+    .nav-resume-circle { display: grid; }
+    /* The bar turns light grey so the plain white circles stand out */
+    .nav-glass { background: rgba(230,230,230,.82); }
 
     .mobile-menu {
         position: fixed; inset: 0; z-index: 39;

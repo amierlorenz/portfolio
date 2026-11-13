@@ -12,6 +12,7 @@ import { setupQuotes } from './card-grids.js?v=20261110c';
 import { setupEmailPill } from './contact.js?v=20261110c';
 import { setupWorkRail } from './work-rail.js?v=20261110c';
 import { setupHeroFloat } from './hero.js?v=20261110c';
+import { setupDock } from './dock.js?v=20261110c';
 import { setupTimeline } from './timeline.js?v=20261110c';
 import { setupTimelineGraph } from './timeline-graph.js?v=20261110c';
 
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEmailPill();
     setupWorkRail();
     setupHeroFloat();
+    setupDock();
     setupTimeline();
     setupTimelineGraph(); // draws over the timeline setupTimeline() just built
 });
