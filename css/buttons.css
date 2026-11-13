@@ -1,0 +1,56 @@
+/* ============ Buttons: nav circles, Resume, hero links, contact ============ */
+/* One look for every button. box-shadow is the button's own shadow (--base, set per button)
+   followed by a halo ring in the button's colour (--halo) that opens to --hs on hover. */
+.social-btn, .nav-resume, .hero-btn, .contact-btn {
+    --halo: rgba(34,34,34,.10);
+    box-shadow: var(--base, 0 0 0 0 transparent), 0 0 0 var(--hs, 0px) var(--halo);
+    transition: box-shadow .4s cubic-bezier(.22,.8,.2,1);
+}
+.social-btn--youtube, .hero-btn--youtube { --halo: rgba(255,0,0,.14); }
+.nav-resume, .hero-btn--resume { --halo: rgba(34,34,34,.18); }
+
+.social-btn > svg, .nav-resume > svg, .hero-btn > svg, .contact-btn > svg {
+    flex: none;
+    transition: transform .5s cubic-bezier(.34,1.8,.64,1);
+}
+
+@keyframes btnNod { 0% { transform: translateY(0); } 40% { transform: translateY(3px); } 100% { transform: translateY(0); } }
+
+@media (hover: hover) {
+    :is(.social-btn, .nav-resume, .hero-btn, .contact-btn):hover { --hs: 5px; }
+    /* The download arrow nods wherever a Resume button is hovered */
+    [data-dock="resume"]:hover > svg { animation: btnNod .7s cubic-bezier(.34,1.6,.64,1); }
+    /* Only the nav circles' icons grow */
+    .social-btn:hover > svg { transform: scale(1.14); }
+}
+
+/* ============ Pop (js/dock.js) ============ */
+/* The hero links and their nav twins swap with the same pair of moves, so docking and undocking
+   mirror each other. Leaving: shrink and fade, accelerating away. Arriving: grow back with an
+   overshoot. transform + opacity only, on layers promoted up front, so Safari doesn't build a
+   layer on the first frame. --delay staggers the buttons; --lead holds an arrival back. */
+.dock-pop {
+    will-change: transform, opacity;
+    transform: translateZ(0) scale(1);
+    opacity: 1;
+    transition:
+        transform .7s cubic-bezier(.34,1.75,.64,1) calc(var(--delay, 0ms) + var(--lead, 0ms)),
+        opacity .3s ease calc(var(--delay, 0ms) + var(--lead, 0ms)),
+        box-shadow .4s cubic-bezier(.22,.8,.2,1);
+}
+.dock-pop.is-out {
+    transform: translateZ(0) scale(.35);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        transform .4s cubic-bezier(.5,0,.75,0) var(--delay, 0ms),
+        opacity .3s ease calc(var(--delay, 0ms) + 100ms),
+        box-shadow .4s ease;
+}
+/* Set while js/dock.js applies the starting state, so a reload halfway down the page doesn't animate */
+.dock-instant .dock-pop { transition: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+    .dock-pop, .dock-pop.is-out { transform: none; transition: opacity .2s ease !important; }
+    [data-dock="resume"]:hover > svg { animation: none; }
+}
