@@ -1,0 +1,206 @@
+/* PROTOTYPE (throwaway, proto/nav-socials only; never merge). Styles for js/prototype-nav.js. */
+
+/* ============ Nav circles ============ */
+.nav-actions { gap: 12px; }
+.proto-socials { display: flex; align-items: center; gap: 8px; }
+.proto-social {
+    position: relative;
+    display: grid; place-items: center;
+    width: 40px; height: 40px; flex: none;
+    border-radius: 999px;
+    background: #fff; color: #222;
+    --ring: #222; --halo: rgba(34,34,34,.12);
+}
+.proto-social--youtube { --ring: #ff0000; --halo: rgba(255,0,0,.14); }
+.proto-resume-circle { display: none; --halo: rgba(255,213,91,.55); }
+.proto-resume-btn { display: flex; align-items: center; gap: 10px; }
+
+@media (max-width: 760px) {
+    /* The circles fill the gap between the avatar and the menu button */
+    .nav-actions { display: flex; flex: 1; justify-content: center; gap: 6px; }
+    .proto-resume-btn { display: none; }
+    .proto-resume-circle { display: grid; }
+    .proto-socials { gap: 6px; }
+    .proto-social { width: 38px; height: 38px; }
+}
+
+/* Desktop: circles lifted off the white bar with a soft shadow */
+@media (min-width: 761px) {
+    .proto-social { --base: 0 1px 2px rgba(0,0,0,.07), 0 4px 14px rgba(0,0,0,.10); }
+}
+/* Phones: the bar turns light grey so the plain white circles stand out */
+@media (max-width: 760px) {
+    .nav-glass { background: rgba(230,230,230,.82); }
+}
+
+/* ============ Hero row ============ */
+.proto-dock .hero { flex-direction: column; gap: 48px; }
+@keyframes protoFade { from { opacity: 0; } to { opacity: 1; } }
+.proto-hero-row { position: relative; z-index: 1; display: flex; justify-content: center; gap: 12px; animation: protoFade .8s ease .75s both; }
+.proto-hero-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    height: 52px; padding: 0 22px 0 16px; border-radius: 999px;
+    background: #fff; color: #222;
+    --base: 0 1px 2px rgba(0,0,0,.07), 0 4px 14px rgba(0,0,0,.10);
+    font-size: 16px; font-weight: 600; line-height: 1; white-space: nowrap;
+}
+.proto-hero-slot { display: grid; }
+.proto-hero-btn--resume { background: #222; color: #fff; }
+@media (max-width: 760px) {
+    .proto-hero-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: min(100%, 320px); }
+    .proto-hero-btn { height: 48px; padding: 0 16px 0 12px; font-size: 15px; }
+}
+
+/* ============ Pop: the same move both ways ============ */
+/* Leaving: shrink and fade, accelerating away. Arriving: grow back with an overshoot.
+   Hero buttons and nav circles use the exact same pair, so docking and undocking mirror each other.
+   transform + opacity only, on layers promoted up front (no layer creation when the pop starts). */
+.proto-dock .proto-pop {
+    will-change: transform, opacity;
+    transform: translateZ(0) scale(1); opacity: 1;
+    transition: transform .7s cubic-bezier(.34,1.75,.64,1) calc(var(--delay, 0ms) + var(--lead, 0ms)), opacity .3s ease calc(var(--delay, 0ms) + var(--lead, 0ms)), var(--hover-t, box-shadow .4s ease);
+}
+.proto-dock .proto-pop.is-out {
+    transform: translateZ(0) scale(.35); opacity: 0; pointer-events: none;
+    transition: transform .4s cubic-bezier(.5,0,.75,0) var(--delay, 0ms), opacity .3s ease calc(var(--delay, 0ms) + 100ms), var(--hover-t, box-shadow .4s ease);
+}
+.proto-instant .proto-pop, .proto-instant .proto-pop.is-out { transition: none !important; }
+
+/* ============ Phone menu: Email / Book a Chat, side by side ============ */
+.proto-menu-reach { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.proto-reach {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    border-radius: 999px; padding: 16px 12px;
+    font-size: 16px; font-weight: 600; line-height: 1.2; white-space: nowrap;
+    background: #fff; color: #222;
+    box-shadow: 0 1px 2px rgba(0,0,0,.07), 0 4px 14px rgba(0,0,0,.10);
+}
+@media (hover: hover) { .proto-reach:hover { color: #222; opacity: .85; } }
+.proto-reach svg { flex: none; }
+
+/* Email is the dark primary, Book a Chat the white secondary */
+.proto-reach--email { background: #222; color: #fff; }
+@media (hover: hover) { .proto-reach--email:hover { color: #fff; } }
+
+/* Keep the prototype switcher out of the way of these buttons while the menu is open */
+html:has(.mobile-menu.is-open) .proto-switcher { bottom: calc(150px + env(safe-area-inset-bottom)); }
+
+/* ============ Get In Touch: LinkedIn, copy-email address, Book a Chat ============ */
+.contact-pills { align-items: center; }
+.proto-cbtn {
+    all: unset; box-sizing: border-box; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 12px 22px 12px 18px; border-radius: 999px;
+    background: #fff; color: #222;
+    --base: inset 0 0 0 2px var(--ring, #fff);
+    font-size: 16px; font-weight: 600; line-height: 1.25;
+    transition: var(--hover-t, box-shadow .4s ease);
+}
+.proto-cbtn:focus-visible { outline: 2px solid #ffd55b; outline-offset: 3px; }
+
+/* The address is the button; the copy icon turns into a green check */
+.proto-copy { gap: 10px; padding-left: 18px; font-weight: 500; letter-spacing: .01em; }
+.proto-copy-icon { display: inline-grid; width: 16px; height: 16px; }
+.proto-copy-icon > span { grid-area: 1 / 1; display: grid; place-items: center; transition: opacity .2s ease, transform .2s ease; }
+.proto-copy-done { opacity: 0; transform: scale(.5); color: #008060; }
+.proto-copy.is-copied { --ring: #008060; }
+.proto-copy.is-copied .proto-copy-idle { opacity: 0; transform: scale(.5); }
+.proto-copy.is-copied .proto-copy-done { opacity: 1; transform: scale(1); }
+
+.proto-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ============ Floating switcher: deliberately not part of the design ============ */
+.proto-switcher {
+    position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); translate: -50% 0;
+    z-index: 100; display: flex; align-items: center; gap: 10px;
+    max-width: calc(100vw - 24px);
+    padding: 6px 8px; border-radius: 999px;
+    background: #6b21a8; color: #fff;
+    font: 500 13px/1.3 'Fira Code', monospace;
+    box-shadow: 0 6px 24px rgba(0,0,0,.3);
+}
+.proto-switcher span { text-align: center; }
+.proto-switcher button {
+    flex: none; width: 32px; height: 32px; border: 0; border-radius: 999px;
+    background: rgba(255,255,255,.18); color: #fff; font-size: 16px; cursor: pointer;
+}
+@media (max-width: 760px) { .proto-switcher .proto-long { display: none; } .proto-switcher b { padding: 0 10px; } }
+
+/* ============ Desktop nav layout: links slide over as the buttons arrive ============ */
+@media (min-width: 761px) {
+    /* Three columns: avatar | links | buttons. */
+    .proto-dock .nav-pill { display: grid; grid-template-columns: auto 1fr auto; }
+    .proto-dock .nav-links { justify-self: center; }
+    .proto-dock .nav-actions { justify-content: flex-end; }
+
+    /* The button area is avatar-wide while empty (so the links sit at true centre), and opens
+       to its full width while any button is docked. Opening: the space opens, then the buttons pop
+       in. Closing: the buttons pop out, then the space closes. The links follow because they're
+       centred in the column that's left. */
+    .proto-center-A .nav-actions {
+        width: 44px;
+        transition: width .55s cubic-bezier(.65,0,.25,1) .3s;
+    }
+    .proto-center-A.proto-has-docked .nav-actions {
+        width: var(--open-w);
+        transition: width .55s cubic-bezier(.65,0,.25,1) 0s;
+    }
+    .proto-center-A .nav-actions .proto-pop:not(.is-out) { --lead: 260ms; }
+    .proto-instant .nav-actions { transition: none !important; }
+
+}
+
+/* ============ Buttons: shared shadow + hover ============ */
+/* Every button draws its box-shadow as: its own look (--base), then a halo ring (--hs wide, --halo
+   colour) that opens on hover. Hover motion uses `translate`, which stacks with the pop's
+   `transform` instead of replacing it. */
+.proto-social, .proto-resume-btn, .proto-hero-btn, .proto-cbtn {
+    --hover-t: translate .35s cubic-bezier(.22,.8,.2,1), background-color .3s ease, box-shadow .4s cubic-bezier(.22,.8,.2,1);
+    --halo: rgba(34,34,34,.10); --tint: #f1f1f1;
+    --lift: 0 2px 4px rgba(0,0,0,.08), 0 10px 24px rgba(0,0,0,.14);
+    box-shadow: var(--base, 0 0 0 0 transparent), 0 0 0 var(--hs, 0px) var(--halo);
+}
+.proto-social--youtube, .proto-hero-btn--youtube { --halo: rgba(255,0,0,.14); --tint: #fff0f0; }
+.proto-hero-btn--resume, .proto-resume-btn { --halo: rgba(34,34,34,.18); --tint: #3d3d3d; --lift: 0 2px 4px rgba(0,0,0,.12), 0 10px 22px rgba(0,0,0,.22); }
+.proto-cbtn { --halo: rgba(255,255,255,.22); --tint: #ececec; --lift: 0 8px 20px rgba(0,0,0,.45); }
+.proto-cbtn--linkedin { --halo: rgba(10,102,194,.5); --tint: #eef5fc; }
+.proto-social svg, .proto-hero-btn svg, .proto-resume-btn svg, .proto-cbtn > svg { transition: transform .5s cubic-bezier(.34,1.8,.64,1); }
+
+@media (hover: hover) {
+    /* Text colour never changes on hover (the old rule turned the hero Resume's text dark) */
+    .proto-social:hover, .proto-hero-btn:hover, .proto-cbtn:hover { color: #222; }
+    .proto-hero-btn--resume:hover, .proto-resume-btn:hover { color: #fff; opacity: 1; }
+
+    /* Every button: a tinted halo ring blooms out */
+    :is(.proto-social, .proto-resume-btn, .proto-hero-btn, .proto-cbtn):hover { --hs: 5px; }
+
+    /* The Resume download arrow always nods (hero and nav) */
+    [data-dock="resume"]:hover > svg { animation: protoNod .7s cubic-bezier(.34,1.6,.64,1); }
+
+    /* Icons grow only on the nav circles */
+    .nav-actions .proto-social:hover > svg { transform: scale(1.14); }
+}
+@keyframes protoNod { 0% { transform: translateY(0); } 40% { transform: translateY(3px); } 100% { transform: translateY(0); } }
+:is(.proto-social, .proto-hero-btn, .proto-cbtn):active > svg { transform: scale(.9); transition-duration: .1s; }
+
+/* ============ Phone menu: centred section links (Email / Book a Chat stay at the bottom) ============ */
+/* …and vertically: the list takes the free space above the buttons and sits in its middle */
+/* Extra bottom padding lifts the list above true centre (by half of it); the gap spreads the links out */
+.proto-malign-center .mobile-menu-list { text-align: center; margin-block: auto; padding-bottom: 12vh; gap: clamp(10px, 2.2vh, 18px); }
+.proto-malign-center .proto-menu-reach { margin-top: 0; }
+/* The menu's top padding clears the nav (bottom at 80px) plus 32px; drop the extra so the list is centred between nav and buttons */
+@media (max-width: 760px) { .proto-malign-center .mobile-menu { padding-top: 80px; } }
+
+/* ============ Book a Chat: a Google-coloured halo instead of the plain one ============ */
+/* A ring can't be multicoloured with box-shadow, so it's a conic-gradient layer behind the pill.
+   .contact-pills isolates, so the layer sits behind the pill but above the dark section. */
+.contact-pills { isolation: isolate; }
+.proto-cbtn--chat { position: relative; --halo: transparent; }
+.proto-cbtn--chat::before {
+    content: ""; position: absolute; inset: -5px; z-index: -1; border-radius: inherit;
+    background: conic-gradient(from -40deg, #4285f4, #fbbc04 90deg, #ea4335 165deg, #34a853 215deg, #4285f4 320deg);
+    opacity: 0; transform: scale(.94);
+    transition: opacity .3s ease, transform .4s cubic-bezier(.22,.8,.2,1);
+}
+@media (hover: hover) { .proto-cbtn--chat:hover::before { opacity: .75; transform: scale(1); } }
+.proto-cbtn--chat:focus-visible::before { opacity: .75; transform: scale(1); }
