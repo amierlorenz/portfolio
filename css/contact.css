@@ -49,7 +49,7 @@
 .site-footer-inner { max-width: 1180px; margin: 0 auto; padding: 36px 24px 48px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; }
 .footer-note { color: #999; font-size: 15px; line-height: 1.4; }
 .footer-heart { display: inline-block; vertical-align: -2px; }
-.footer-links { display: flex; gap: 20px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 12px 20px; }   /* six links: wrap on phones */
 
 .contact-dark .foot-link {
     color: #999;
