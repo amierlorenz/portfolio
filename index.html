@@ -58,7 +58,8 @@
             </nav>
         </header>
 
-        <!-- Phone menu (≤760px): full-screen overlay opened by #menu-button; behavior in js/mobile-menu.js -->
+        <!-- Phone menu (≤760px): full-screen overlay opened by #menu-button; behavior in js/mobile-menu.js.
+             Resume lives in the nav now, so the bottom row is the two ways to reach me. -->
         <nav id="mobile-menu" class="mobile-menu" aria-label="Menu">
             <ul class="mobile-menu-list">
                 <li><a href="#about" style="--i:0">About</a></li>
@@ -67,10 +68,10 @@
                 <li><a href="#skills" style="--i:3">Skills</a></li>
                 <li><a href="#contact" style="--i:4">Contact</a></li>
             </ul>
-            <a href="resume.pdf" class="mobile-menu-resume" target="_blank" rel="noopener">
-                <span>Download my resume</span>
-                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12"/><path d="m6 10 6 6 6-6"/><path d="M5 20h14"/></svg>
-            </a>
+            <div class="mobile-menu-reach">
+                <a href="mailto:amierLdavis@gmail.com" class="mobile-menu-btn mobile-menu-btn--email"><svg width="20" height="20" aria-hidden="true"><use href="#mail-icon"/></svg><span>Email me</span></a>
+                <a href="https://calendar.app.google/cnMKfDF11F9o77mK7" class="mobile-menu-btn" target="_blank" rel="noopener"><svg width="20" height="20" aria-hidden="true"><use href="#calendar-mark"/></svg><span>Book a Chat</span></a>
+            </div>
         </nav>
 
         <!-- Hero: each word rises in after its --d delay -->

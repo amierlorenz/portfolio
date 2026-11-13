@@ -97,8 +97,14 @@
     .mobile-menu.is-open { opacity: 1; visibility: visible; transition: opacity .35s ease; }
 }
 
-/* Each link's --i (set in the HTML) staggers its entrance */
-.mobile-menu-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+/* Section links: centred, a little above the middle of the space between the nav and the bottom
+   buttons (the extra bottom padding lifts them). Each link's --i (set in the HTML) staggers its entrance. */
+.mobile-menu-list {
+    list-style: none; display: flex; flex-direction: column;
+    gap: clamp(10px, 2.2vh, 18px);
+    margin-block: auto; padding-bottom: 12vh;
+    text-align: center;
+}
 .mobile-menu-list a {
     display: block;
     font-family: 'Instrument Serif', serif;
@@ -108,13 +114,21 @@
     transition: translate .5s cubic-bezier(.22,.8,.2,1), opacity .4s ease;
 }
 .mobile-menu.is-open .mobile-menu-list a { opacity: 1; translate: 0 0; transition-delay: calc(var(--i) * 45ms + 80ms); }
+/* The menu's top padding clears the nav (bottom at 80px); the list centres itself in what's left */
+@media (max-width: 760px) { .mobile-menu { padding-top: 80px; } }
 
-.mobile-menu-resume {
-    margin-top: auto;
-    display: flex; align-items: center; justify-content: center; gap: 14px;
-    padding: 18px 24px;
-    border-radius: 999px;
-    background: #ffd55b; color: #222;
-    font-size: 16px; font-weight: 600; line-height: 1.25;
+/* Bottom row: Email (dark, the primary) and Book a Chat side by side */
+.mobile-menu-reach { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mobile-menu-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 16px 12px; border-radius: 999px;
+    background: #fff; color: #222;
+    box-shadow: 0 1px 2px rgba(0,0,0,.07), 0 4px 14px rgba(0,0,0,.10);
+    font-size: 16px; font-weight: 600; line-height: 1.2; white-space: nowrap;
 }
-@media (hover: hover) { .mobile-menu-resume:hover { color: #222; opacity: .8; } }
+.mobile-menu-btn svg { flex: none; }
+.mobile-menu-btn--email { background: #222; color: #fff; }
+@media (hover: hover) {
+    .mobile-menu-btn:hover { color: #222; opacity: .85; }
+    .mobile-menu-btn--email:hover { color: #fff; }
+}
