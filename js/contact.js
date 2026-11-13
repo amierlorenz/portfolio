@@ -1,15 +1,22 @@
-// ============ Copy-email pill ============
+// ============ Copy-email button ============
+// The button shows the address; clicking copies it. The copy icon turns into a green check for
+// a moment, and #email-status announces it to screen readers.
 export function setupEmailPill() {
-    const pill = document.getElementById('email-button');
-    if (!pill) return;
+    const button = document.getElementById('email-button');
+    if (!button) return;
 
-    const EMAIL = pill.dataset.email || 'amierLdavis@gmail.com';
+    const EMAIL = button.dataset.email || 'amierLdavis@gmail.com';
+    const status = document.getElementById('email-status');
     let copiedTimer = null;
 
     const showCopied = () => {
-        pill.classList.add('copied');
+        button.classList.add('copied');
+        if (status) status.textContent = 'Email address copied';
         clearTimeout(copiedTimer);
-        copiedTimer = setTimeout(() => pill.classList.remove('copied'), 1800);
+        copiedTimer = setTimeout(() => {
+            button.classList.remove('copied');
+            if (status) status.textContent = '';
+        }, 1800);
     };
 
     const copyEmail = async () => {
@@ -30,6 +37,5 @@ export function setupEmailPill() {
         showCopied();
     };
 
-    // Clicking anywhere in the pill copies the email
-    pill.addEventListener('click', copyEmail);
+    button.addEventListener('click', copyEmail);
 }
