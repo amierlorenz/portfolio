@@ -4,7 +4,7 @@
 // timeline items, and a Writing link in the nav. The All posts page is blog-prototype/ (card grid).
 // Screenshots, clips (simulated by cycling frames) and posts are placeholders.
 
-const PROJECTS = [
+export const PROJECTS = [
     { name: 'Mieracle Study', kind: 'iPhone + Mac App', status: 'In progress', color: 'ffd55b',
       repo: 'https://github.com/amierlorenz/mieracle-study', stack: ['Swift', 'SwiftUI', 'SM-2', 'On-device AI'],
       blurb: 'Spaced repetition with on-device AI grading and live exam dates from the Canvas LMS API.',
@@ -45,7 +45,7 @@ export const POSTS = [
 ];
 export const TOPIC_COLOR = { AI: '4cc6ce', Swift: 'ff7e59', Teaching: 'ffd55b', Career: '222222', 'Open source': 'BBBBBB' };
 
-const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+export const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const shotImg = (label, w, h) => `https://placehold.co/${w}x${h}/ffffff/222222?text=${label}`;
 const gh = '<svg width="20" height="20" aria-hidden="true"><use href="#gh-mark"/></svg>';
 export const arrow = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>';
@@ -59,6 +59,17 @@ export const cover = (x, big) => x.cover
     ? `<div class="wr-cover wr-cover--img ${big ? 'is-big' : ''}"><img src="${x.cover}" alt=""></div>`
     : `<div class="wr-cover ${big ? 'is-big' : ''}">
         <span class="wr-cover-topic"><i style="background:#${TOPIC_COLOR[x.topic]}"></i>${x.topic}</span><span class="wr-cover-title">${x.title}</span></div>`;
+
+// ---------- Post card (picked: title on the art, then meta, title and summary below) ----------
+// The art stands in for a real cover image; a post with `cover` set shows that image instead.
+// The hover ring takes the topic's colour (--tc).
+const hexA = (hex, a) => `rgba(${[0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(',')},${a})`;
+export function postCard(x, { href, big = false, mins = true, cls = 'bp-card' } = {}) {
+    return `<a class="${cls}" href="${href}" data-topic="${x.topic}" style="--tc:${hexA(TOPIC_COLOR[x.topic], .35)}">${cover(x, big)}
+      <span class="wr-meta">${meta(x)}${mins ? ` · ${x.mins} min` : ''}</span>
+      <span class="wr-title ${big ? '' : 'wr-title--sm'}">${x.title}</span>
+      <span class="wr-dek">${x.description}</span></a>`;
+}
 
 // A fake clip: frames that cycle. In the real build this is <video autoplay muted loop playsinline> (see MEDIA.md).
 const clip = (p, w, h) => `
@@ -89,7 +100,7 @@ function projects() {
             <p class="pD-blurb">${p.blurb}</p>
             <div class="work-tags">${p.stack.map((t) => `<span>${t}</span>`).join('')}</div>
             <div class="pD-links">
-              ${post ? `<a class="hero-btn hero-btn--resume" href="blog-prototype/?post=${post.slug}">Build log ${arrow}</a>` : ''}
+              ${post ? `<a class="hero-btn hero-btn--resume" href="blog-prototype/post.html?post=${post.slug}">Build log ${arrow}</a>` : ''}
               <a class="hero-btn" href="${p.repo}" target="_blank" rel="noopener">${gh}<span>GitHub</span></a>
             </div>
           </div>
@@ -116,15 +127,14 @@ function wireProjects(root) {
 }
 
 // ---------- Writing (featured post + list) ----------
-const href = (x) => `blog-prototype/?post=${x.slug}`;
+const href = (x) => `blog-prototype/post.html?post=${x.slug}`;
 function writing() {
     const [lead, ...rest] = POSTS;
     return `
   <div class="wr">
-    <div class="wr-head"><h2 class="section-title">Writing</h2><a class="hero-btn" href="blog-prototype/">All posts ${arrow}</a></div>
+    <div class="wr-head"><h2 class="section-title">Writing</h2><a class="text-link" href="blog-prototype/">All writing ${arrow}</a></div>
     <div class="w2">
-      <a class="w2-lead" href="${href(lead)}">${cover(lead, true)}
-        <span class="wr-meta">${meta(lead)} · ${lead.mins} min</span><span class="wr-dek">${lead.description}</span></a>
+      ${postCard(lead, { href: href(lead), big: true, cls: 'w2-lead' })}
       <div class="w2-list">${rest.slice(0, 4).map((x) => `<a class="w2-row" href="${href(x)}">
           <span class="wr-title wr-title--sm">${x.title}</span><span class="wr-meta">${meta(x)}</span></a>`).join('')}</div>
     </div>

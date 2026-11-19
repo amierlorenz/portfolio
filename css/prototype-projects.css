@@ -90,7 +90,7 @@
     display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
     transition: box-shadow .4s cubic-bezier(.22,.8,.2,1);
 }
-@media (hover: hover) { a:hover > .wr-cover { box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), 0 0 0 5px rgba(34,34,34,.10); } }
+@media (hover: hover) { a:hover > .wr-cover { box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), 0 0 0 6px var(--tc, rgba(34,34,34,.10)); } }
 .wr-cover--img { padding: 0; }
 .wr-cover--img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .wr-cover-topic { display: inline-flex; align-items: center; gap: 8px; font: 12px 'Fira Code', monospace; text-transform: uppercase; letter-spacing: .08em; color: #555; }
@@ -113,14 +113,13 @@
 /* ================= All posts page (blog-prototype/) ================= */
 .bp { max-width: 1180px; margin: 0 auto; padding: clamp(140px, 16vw, 200px) 24px clamp(64px, 10vw, 120px); }
 
-.bp-back { display: inline-flex; margin-bottom: 28px; }
 @media (hover: hover) { .bp-back:hover > svg { transform: rotate(180deg) translateX(3px) !important; } }
 .bp-title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(72px, 11vw, 160px); line-height: .9; }
 .bp-lede { margin-top: 20px; max-width: 560px; font-size: clamp(18px, 1.6vw, 20px); line-height: 1.5; color: #444; }
 .bp-chips { display: flex; flex-wrap: wrap; gap: 10px; margin: clamp(32px, 4vw, 48px) 0; }
 .bp-chips button {
     --base: 0 1px 2px rgba(0,0,0,.07), 0 4px 14px rgba(0,0,0,.10);
-    box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    box-sizing: border-box; border: 0; font: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
     height: 40px; padding: 0 16px; border-radius: 999px; background: #fff; color: #222; font-size: 14px; font-weight: 600;
     box-shadow: var(--base), 0 0 0 var(--hs, 0px) rgba(34,34,34,.10); transition: box-shadow .4s cubic-bezier(.22,.8,.2,1);
 }
@@ -133,3 +132,123 @@
 .bp-note { margin-top: 48px; padding: 16px 20px; border-radius: 16px; background: #fff; font: 13px/1.5 'Fira Code', monospace; color: #555; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
 @media (max-width: 1000px) { .bp-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px) { .bp-grid { grid-template-columns: 1fr; } }
+
+/* ================= Post page (blog-prototype/post.html) ================= */
+/* Floating switcher (not part of the design) */
+.proto-dock { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.proto-bar {
+    display: flex; align-items: center; gap: 4px; padding: 5px; background: #111; color: #fff; border-radius: 999px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.35); font: 500 13px/1 'Fira Code', monospace; outline: 2px dashed #ff00aa; outline-offset: 2px;
+}
+.proto-bar button { all: unset; cursor: pointer; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; }
+.proto-bar button:hover { background: #333; }
+.proto-bar span { padding: 0 10px; white-space: nowrap; min-width: 250px; text-align: center; }
+
+.ps { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+.ps-back { display: inline-flex; margin-bottom: 28px; }
+@media (hover: hover) { .ps-back:hover > svg { transform: rotate(180deg) translateX(3px) !important; } }
+.ps-kicker { display: block; font: 13px/1.4 'Fira Code', monospace; color: #666; margin-bottom: 14px; }
+.ps-kicker a { text-decoration: underline; text-underline-offset: 3px; }
+.ps-title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(48px, 7vw, 96px); line-height: .95; text-wrap: pretty; }
+.ps-dek { margin-top: 20px; font-size: clamp(19px, 1.8vw, 22px); line-height: 1.45; color: #444; text-wrap: pretty; }
+.ps-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 24px; font: 13px 'Fira Code', monospace; color: #666; }
+.ps-meta span { display: inline-flex; align-items: center; gap: 8px; }
+.ps-meta i { width: 9px; height: 9px; border-radius: 50%; }
+.ps-cover { display: block; width: 100%; border-radius: 28px; margin-top: 48px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+
+/* ---- Body text: everything Markdown can produce ---- */
+.prose { font-size: 19px; line-height: 1.7; color: #2a2a2a; }
+.prose > * + * { margin-top: 1.1em; }
+.prose h2 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(34px, 3.4vw, 44px); line-height: 1.05; margin-top: 2em; scroll-margin-top: 110px; }
+.prose h3 { font-size: 21px; font-weight: 600; line-height: 1.3; margin-top: 1.8em; }
+.prose a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.prose strong { font-weight: 600; }
+.prose ul, .prose ol { padding-left: 1.3em; }
+.prose li + li { margin-top: .4em; }
+.prose li::marker { color: #999; }
+.prose code { font: .86em 'Fira Code', monospace; background: #fff; padding: .15em .4em; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+.prose pre { background: #222; color: #f5f5f5; border-radius: 20px; padding: 22px 24px; overflow-x: auto; font-size: 15px; line-height: 1.6; }
+.prose pre code { background: none; box-shadow: none; padding: 0; font-size: inherit; color: inherit; }
+.prose blockquote { border-left: 3px solid #ffd55b; padding: .1em 0 .1em 1.1em; font-family: 'Instrument Serif', serif; font-size: 28px; line-height: 1.25; color: #222; }
+.prose img { display: block; width: 100%; height: auto; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+.prose hr { border: 0; height: 1px; background: #DDD; margin: 2.4em 0; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 16px; }
+@media (max-width: 760px) { .prose table { display: block; overflow-x: auto; } }
+.prose th { text-align: left; font: 500 12px 'Fira Code', monospace; text-transform: uppercase; letter-spacing: .06em; color: #888; padding: 0 16px 10px 0; border-bottom: 1px solid #222; }
+.prose td { padding: 12px 16px 12px 0; border-bottom: 1px solid #DDD; }
+
+/* ---- End matter ---- */
+.ps-project { margin-top: 64px; padding: clamp(24px, 3vw, 36px); border-radius: 28px; background: #fff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+.ps-project .ps-kicker { margin-bottom: 8px; }
+.ps-project-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+.ps-project h3 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 40px; line-height: 1; }
+.ps-project p { margin-top: 8px; max-width: 440px; color: #555; line-height: 1.5; }
+.ps-project-links { display: flex; gap: 10px; flex-wrap: wrap; }
+.ps-more { max-width: 1180px; margin: clamp(80px, 10vw, 140px) auto 0; padding: 0 24px clamp(64px, 10vw, 120px); }
+.ps-more-title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(44px, 5vw, 72px); line-height: .95; }
+.ps-more .bp-grid { margin-top: 36px; }
+
+/* ---- A: reading column ---- */
+.ps--a { max-width: 888px; padding-top: clamp(130px, 14vw, 180px); }
+.ps--a .prose { margin-top: 56px; }
+
+/* ---- B: side rail ---- */
+
+/* ---- C: yellow band ---- */
+.ps-band { background: #ffd55b; margin-top: 96px; padding: clamp(40px, 5vw, 64px) 24px clamp(48px, 6vw, 72px); }
+.ps-band--panel { max-width: 1180px; margin: 96px auto 0; border-radius: 28px; }
+@media (max-width: 1212px) { .ps-band--panel { margin-inline: 16px; } }
+.ps-band-inner { max-width: 840px; margin: 0 auto; }
+.ps-band .ps-kicker, .ps-band .ps-meta, .ps-band .ps-dek { color: #222; }
+.ps--c { max-width: 888px; padding-top: 56px; }
+
+@media (max-width: 760px) {
+    .prose { font-size: 18px; }
+    .prose blockquote { font-size: 24px; }
+    .ps-project-links { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+    .proto-bar { font-size: 11px; }
+}
+
+/* ================= Post page: side rail (D, D2) ================= */
+.ps-band--wide .ps-band-inner { max-width: 1104px; }
+.ps--d { max-width: 1152px; padding-top: 56px; }
+.ps-d-grid { display: grid; grid-template-columns: 200px minmax(0, 840px); gap: 64px; }
+.ps-d-grid > * { min-width: 0; }
+.ps-rail { position: sticky; top: 110px; align-self: start; display: flex; flex-direction: column; gap: 28px; }
+.ps-toc-list { position: relative; display: flex; flex-direction: column; }
+/* The track (grey) and the fill (yellow) both run down the left edge of the list */
+.ps-toc-list::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #DDD; border-radius: 2px; }
+.ps-toc-fill { position: absolute; left: 0; top: 0; width: 2px; height: 0; background: #ffd55b; border-radius: 2px; transition: height .15s linear; }
+.ps-toc-fill::after { /* a dot rides the end of the fill */
+    content: ""; position: absolute; left: 50%; bottom: -5px; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%;
+    background: #ffd55b; box-shadow: 0 0 0 3px #F5F5F5; transition: transform .3s cubic-bezier(.34,1.8,.64,1);
+}
+.ps-toc-list a { position: relative; padding: 7px 0 7px 16px; font-size: 15px; line-height: 1.35; color: #999; transition: color .3s ease, transform .4s cubic-bezier(.22,.8,.2,1); }
+.ps-toc-list a.is-read { color: #444; }
+.ps-toc-list a.is-on { color: #222; font-weight: 600; transform: translateX(4px); }
+@media (hover: hover) { .ps-toc-list a:hover { color: #222; } }
+.ps-toc .ps-kicker { margin-bottom: 10px; }
+.ps-rail-proj { display: flex; flex-direction: column; font-family: 'Instrument Serif', serif; font-size: 26px; line-height: 1.05; }
+.ps-rail-proj .ps-kicker { margin-bottom: 4px; }
+.ps-rail-proj svg { margin-top: 6px; }
+.ps-top { font: 13px 'Fira Code', monospace; color: #666; }
+@media (max-width: 960px) {
+    .ps-d-grid { grid-template-columns: minmax(0, 1fr); }
+    .ps-rail { display: none; }
+}
+@media (max-width: 760px) { .proto-bar span { min-width: 0; } .proto-dock { width: calc(100% - 20px); } .proto-bar { width: 100%; justify-content: space-between; font-size: 11px; } }
+
+/* ================= Text links (All writing, Back): muted ================= */
+.text-link {
+    display: inline-flex; align-items: center; gap: 8px; font-weight: 500; font-size: 16px; color: #777;
+    text-decoration: underline; text-decoration-color: #BBB; text-decoration-thickness: 1.5px; text-underline-offset: 5px;
+    transition: color .3s ease, text-decoration-color .3s ease;
+}
+.text-link svg { transition: transform .4s cubic-bezier(.34,1.8,.64,1); }
+@media (hover: hover) {
+    .text-link:hover { color: #222; text-decoration-color: #222; }
+    .text-link:hover > svg { transform: translateX(3px); }
+    .ps-back.text-link:hover > svg, .bp-back.text-link:hover > svg { transform: rotate(180deg) translateX(3px) !important; }
+}
+.ps-band .text-link { color: #5c4a10; text-decoration-color: rgba(34,34,34,.35); }
+.ps-back.text-link, .bp-back.text-link { margin-bottom: 28px; }
