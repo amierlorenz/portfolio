@@ -58,3 +58,4 @@ that project's **Build log →** button on the homepage (the newest one wins).
 - **Old Medium links** on blog.amierlorenz.com redirect here via the `amierlorenz/blog-redirect` repo. Only posts
   that first lived on Medium need an entry there.
 - **Local commands:** `npm start` (preview with drafts, live reload), `npm run build` (exactly what deploys, into `_site/`).
+  Both write to `_site/`, so running a build while the preview is open hides your drafts there: restart `npm start`.
