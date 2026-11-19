@@ -2,7 +2,7 @@
 title: Making my first open-source contribution after years of being too scared
 description: How CodePath's AI301 course gave me the structure and accountability to open my first open-source PR, and what I learned about owning code written with AI.
 date: 2026-11-13
-type: Essay
+type: Story
 topic: Open source
 cover: /media/blog/first-open-source-contribution-cover.png
 draft: false

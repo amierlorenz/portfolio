@@ -52,7 +52,7 @@ content:
         required: true
         default: Notes
         options:
-          values: [Essay, Build log, Notes]
+          values: [Story, Reflection, Dev log, Build log, Notes, Blog]
       - name: topic
         label: Topic
         type: select
