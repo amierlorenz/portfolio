@@ -76,7 +76,7 @@
 }
 
 /* ================= Writing section ================= */
-.writing { padding: 0 0 clamp(56px, 10vw, 120px); background: #F5F5F5; }
+.writing { padding: clamp(56px, 10vw, 120px) 0; background: var(--writing-bg, transparent); transition: background-color .4s ease; }
 .wr-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
 .wr-meta { font: 13px/1.4 'Fira Code', monospace; color: #666; }
 .wr-title { font-family: 'Instrument Serif', serif; font-size: clamp(28px, 2.6vw, 36px); line-height: 1.05; text-wrap: balance; }
@@ -111,7 +111,12 @@
 .tl-it .tlm { margin-top: 4px; }
 
 /* ================= All posts page (blog-prototype/) ================= */
-.bp { max-width: 1180px; margin: 0 auto; padding: clamp(140px, 16vw, 200px) 24px clamp(64px, 10vw, 120px); }
+.bp { max-width: 1180px; margin: 0 auto; padding: 0 24px clamp(64px, 10vw, 120px); }
+/* All writing header: a band in the Writing colour (grey = no band), like the post header */
+.bp-band { margin-top: 96px; padding: clamp(40px, 5vw, 64px) 24px clamp(40px, 5vw, 56px); background: var(--writing-bg, transparent); transition: background-color .4s ease; }
+.bp-band-inner { max-width: 1132px; margin: 0 auto; }
+.bp-band .text-link { color: #5c4a10; text-decoration-color: rgba(34,34,34,.35); }
+[data-wb="1"] .bp-band .text-link, [data-wb="4"] .bp-band .text-link { color: #777; text-decoration-color: #BBB; }
 
 @media (hover: hover) { .bp-back:hover > svg { transform: rotate(180deg) translateX(3px) !important; } }
 .bp-title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(72px, 11vw, 160px); line-height: .9; }
@@ -123,6 +128,7 @@
     height: 40px; padding: 0 16px; border-radius: 999px; background: #fff; color: #222; font-size: 14px; font-weight: 600;
     box-shadow: var(--base), 0 0 0 var(--hs, 0px) rgba(34,34,34,.10); transition: box-shadow .4s cubic-bezier(.22,.8,.2,1);
 }
+.bp-chips button { box-shadow: var(--base), 0 0 0 var(--hs, 0px) var(--tc, rgba(34,34,34,.10)); }
 @media (hover: hover) { .bp-chips button:hover { --hs: 5px; } }
 .bp-chips button i { width: 8px; height: 8px; border-radius: 50%; }
 .bp-chips button.is-on { background: #222; color: #fff; }
@@ -252,3 +258,45 @@
 }
 .ps-band .text-link { color: #5c4a10; text-decoration-color: rgba(34,34,34,.35); }
 .ps-back.text-link, .bp-back.text-link { margin-bottom: 28px; }
+
+/* ================= Featured Projects: discovery ================= */
+/* Before a project is in view its three cards sit stacked in the front card's spot, low and faded;
+   .is-in deals them out (front first, then left, then right) and the text rises after. */
+.pD-file:not(.is-in) .pD-card { opacity: 0; transform: translateY(48px) scale(.92) !important; }
+.pD-collage--phone .pD-card { --fl: 27.5%; --ft: 0; --fw: 45%; }
+.pD-collage--window .pD-card { --fl: 10%; --ft: 22%; --fw: 80%; }
+.pD-file:not(.is-in) .pD-card { left: var(--fl) !important; top: var(--ft) !important; width: var(--fw) !important; }
+.pD-card { transition: left .8s cubic-bezier(.22,.8,.2,1), top .8s cubic-bezier(.22,.8,.2,1), width .8s cubic-bezier(.22,.8,.2,1),
+                       transform .8s cubic-bezier(.22,.8,.2,1), opacity .5s ease, box-shadow .4s ease; }
+.pD-file.is-in:not(.is-settled) [data-role="left"]  { transition-delay: .25s; }
+.pD-file.is-in:not(.is-settled) [data-role="right"] { transition-delay: .35s; }
+.pD-file .pD-text { transition: opacity .8s ease .3s, transform .9s cubic-bezier(.22,.8,.2,1) .3s; }
+.pD-file:not(.is-in) .pD-text { opacity: 0; transform: translateY(32px); }
+
+/* Jumping to #writing or a project lands below the fixed nav */
+.writing, .pD-file { scroll-margin-top: 110px; }
+
+/* Solo prototype bar (Writing colour) */
+.proto-bar--solo { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 9999; }
+@media (max-width: 760px) { .proto-bar--solo { width: calc(100% - 20px); justify-content: space-between; font-size: 11px; } .proto-bar--solo span { min-width: 0; } }
+
+/* Phones, post pages: the nav slides away while reading down (post.js) */
+.site-header.nav-away { transform: translateY(calc(-100% - 24px)); }
+
+/* ================= Writing colour: white (picked) ================= */
+:root { --writing-bg: #ffffff; }
+/* Cards sit on white in the Writing section, so they get a hairline + soft shadow to lift off it */
+.writing .wr-cover { box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), 0 6px 24px rgba(0,0,0,.06); }
+.bp-band .text-link { color: #777; text-decoration-color: #BBB; }
+
+/* ================= Few or no posts ================= */
+.w2--solo { grid-template-columns: minmax(0, 760px); }
+.bp-n { font: 12px 'Fira Code', monospace; opacity: .55; }
+.bp-grid--nochips { margin-top: clamp(32px, 4vw, 48px); }
+.bp-empty {
+    margin-top: clamp(32px, 4vw, 48px); max-width: 640px; padding: clamp(24px, 3vw, 40px); border-radius: 28px;
+    background: #fff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); display: flex; flex-direction: column; gap: 14px;
+}
+
+/* Hovering a post (card or list row) tints its text in the topic's colour instead of the site-wide cyan */
+@media (hover: hover) { :is(.bp-card, .w2-lead, .w2-row):hover { color: var(--tt, #222); } }

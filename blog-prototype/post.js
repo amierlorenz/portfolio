@@ -3,13 +3,13 @@
 // The body below is the HTML Eleventy's Markdown renderer makes from a Pages CMS rich-text field
 // (saved as Markdown), so every element styled here is one the editor can produce.
 // The table only matters if the Pages CMS editor offers tables (not confirmed yet).
-import { POSTS, PROJECTS, TOPIC_COLOR, fmtDate, arrow, slug, postCard } from '../js/prototype-projects.js';
+import { POSTS, TOPIC_COLOR, fmtDate, arrow, postCard } from '../js/prototype-projects.js';
 import { setupMobileMenu } from '../js/mobile-menu.js?v=20261112a';
 
 setupMobileMenu();
 const q = new URLSearchParams(location.search);
-const post = POSTS.find((x) => x.slug === q.get('post')) || POSTS[1];
-const project = PROJECTS.find((p) => p.name === post.project);
+const post = POSTS.find((x) => x.slug === q.get('post')) || POSTS[1] || POSTS[0];
+const repoName = post.repo ? new URL(post.repo).pathname.slice(1) : null; // e.g. amierlorenz/mieracle-study
 const back = arrow.replace('<svg ', '<svg style="transform:rotate(180deg)" ');
 const gh = '<svg width="20" height="20" aria-hidden="true"><use href="#gh-mark"/></svg>';
 
@@ -57,29 +57,32 @@ scheduler.review(card, quality: result.content.score)</code></pre>
 
 const toc = () => [...BODY.matchAll(/<h2 id="([^"]+)">([^<]+)<\/h2>/g)].map(([, id, t]) => `<a href="#${id}">${t}</a>`).join('');
 const metaRow = `<span>${fmtDate(post.date)}</span><span>${post.mins} min read</span><span><i style="background:#${TOPIC_COLOR[post.topic]}"></i>${post.topic}</span>`;
-const kicker = `<span class="ps-kicker">${post.type}${project ? ` · <a href="../#proj-${slug(project.name)}">${project.name}</a>` : ''}</span>`;
+const diag = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>';
+const kicker = `<span class="ps-kicker">${post.type}${post.repo ? ` · <a href="${post.repo}" target="_blank" rel="noopener">GitHub ${diag}</a>` : ''}</span>`;
 
-// End matter: a build log points back at its project; every post offers more writing
-const projectCard = project ? `
+// End matter: posts with a repo get a small code card (works for any project, featured or not)
+const projectCard = post.repo ? `
   <aside class="ps-project">
-    <span class="ps-kicker">This is a build log for</span>
     <div class="ps-project-row">
-      <div><h3>${project.name}</h3><p>${project.blurb}</p></div>
-      <div class="ps-project-links">
-        <a class="hero-btn hero-btn--resume" href="../#proj-${slug(project.name)}">See the project ${arrow}</a>
-        <a class="hero-btn" href="${project.repo}" target="_blank" rel="noopener">${gh}<span>GitHub</span></a>
-      </div>
+      <div><span class="ps-kicker">The code</span><h3>${repoName}</h3></div>
+      <a class="hero-btn" href="${post.repo}" target="_blank" rel="noopener">${gh}<span>View on GitHub</span></a>
     </div>
   </aside>` : '';
 const more = () => {
+    // Up to three other posts; with no other posts the section is left out
     const others = POSTS.filter((x) => x.slug !== post.slug).slice(0, 3);
+    if (!others.length) return '';
     return `
   <section class="ps-more">
     <div class="wr-head"><h2 class="ps-more-title">More writing</h2><a class="text-link" href="./">All writing ${arrow}</a></div>
     <div class="bp-grid">${others.map((x) => postCard(x, { href: `?post=${x.slug}` })).join('')}</div>
   </section>`;
 };
-const backBtn = `<a class="text-link ps-back" href="./">${back} All writing</a>`;
+// Back: from the homepage (?from=proj-… or writing) it returns to that spot; otherwise All writing
+const from = q.get('from');
+const backBtn = from
+    ? `<a class="text-link ps-back" href="../#${from}" data-home>${back} Back</a>`
+    : `<a class="text-link ps-back" href="./">${back} All writing</a>`;
 
 const head = () => `${backBtn}${kicker}<h1 class="ps-title">${post.title}</h1>
         <p class="ps-dek">${post.description}</p><div class="ps-meta">${metaRow}</div>`;
@@ -88,7 +91,6 @@ const rail = () => `
   <aside class="ps-rail">
     <nav class="ps-toc" aria-label="Contents"><span class="ps-kicker">Contents</span>
       <div class="ps-toc-list"><span class="ps-toc-fill" aria-hidden="true"></span>${toc()}</div></nav>
-    ${project ? `<a class="ps-rail-proj" href="../#proj-${slug(project.name)}"><span class="ps-kicker">Build log for</span>${project.name} ${arrow}</a>` : ''}
     <a class="ps-top" href="#">Back to top ↑</a>
   </aside>`;
 const page = () => `
@@ -134,5 +136,21 @@ const root = document.getElementById('bp-root');
 document.title = `${post.title} · Amier Lorenz Davis`;
 root.innerHTML = page();
 watchSections();
+// Coming straight from the homepage, the browser's own back restores the exact scroll position
+root.querySelector('[data-home]')?.addEventListener('click', (e) => {
+    if (document.referrer && new URL(document.referrer).pathname.replace(/index\.html$/, '') === new URL('../', location.href).pathname) { e.preventDefault(); history.back(); }
+});
 // Back to top: all the way up, not just to the header
 root.querySelector('.ps-top').addEventListener('click', (e) => { e.preventDefault(); scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); });
+
+// Phones: the nav slides up out of the way while you scroll down, and back the moment you scroll up
+const header = document.querySelector('.site-header');
+let lastY = scrollY;
+addEventListener('scroll', () => {
+    const y = scrollY;
+    const phone = matchMedia('(max-width: 760px)').matches;
+    const menuOpen = document.getElementById('mobile-menu')?.classList.contains('is-open');
+    if (!phone || menuOpen || y < 120) header.classList.remove('nav-away');
+    else if (Math.abs(y - lastY) > 6) header.classList.toggle('nav-away', y > lastY);
+    lastY = y;
+}, { passive: true });

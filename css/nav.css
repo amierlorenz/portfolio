@@ -114,8 +114,9 @@
     transition: translate .5s cubic-bezier(.22,.8,.2,1), opacity .4s ease;
 }
 .mobile-menu.is-open .mobile-menu-list a { opacity: 1; translate: 0 0; transition-delay: calc(var(--i) * 45ms + 80ms); }
-/* The menu's top padding clears the nav (bottom at 80px); the list centres itself in what's left */
-@media (max-width: 760px) { .mobile-menu { padding-top: 80px; } }
+/* The menu's top padding clears the nav (its measured bottom, set by js/mobile-menu.js; 80px before
+   that); the list centres itself in what's left above the buttons */
+@media (max-width: 760px) { .mobile-menu { padding-top: var(--nav-bottom, 80px); } }
 
 /* Bottom row: Email (dark, the primary) and Book a Chat side by side */
 .mobile-menu-reach { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
