@@ -15,9 +15,10 @@ content:
     type: collection
     path: blog
     format: yaml-frontmatter
-    # The file name becomes the URL (/blog/<file name>/), so it's set once, when the post is created
+    # The file name becomes the URL (/blog/<file name>/), so it's set once, when the post is created.
+    # {title} is the slugified title ("Test Draft" -> test-draft.md)
     filename:
-      template: "{primary}.md"
+      template: "{title}.md"
       field: create
     # Not a post: tells Eleventy how to build the posts
     exclude: [blog.11tydata.js]

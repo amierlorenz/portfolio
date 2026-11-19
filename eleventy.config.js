@@ -2,6 +2,7 @@
 // Templates (.njk, .md) become pages; everything else the site needs is copied as-is.
 import fs from "node:fs";
 import { feedPlugin } from "@11ty/eleventy-plugin-rss";
+import markdownItIns from "markdown-it-ins";
 import site from "./_data/site.js";
 import topics, { fallback as topicFallback } from "./_data/topics.js";
 
@@ -17,6 +18,9 @@ export default function (config) {
   // root-level docs (CLAUDE.md, MEDIA.md, ...) and the archive submodule.
   config.ignores.add("*.md");
   config.ignores.add("portfolio-archive/**");
+
+  // Pages CMS saves underlined text as ++text++; this renders it (as <ins>, underlined by default)
+  config.amendLibrary("md", (md) => md.use(markdownItIns));
 
   // A line holding only a {% tag %} leaves nothing behind, so partials don't add blank lines.
   config.setNunjucksEnvironmentOptions({ trimBlocks: true, lstripBlocks: true });

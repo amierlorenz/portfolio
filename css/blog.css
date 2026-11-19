@@ -120,3 +120,4 @@
 .more-title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(44px, 5vw, 72px); line-height: .95; }
 .more-writing .post-grid { margin-top: 36px; }
 @media (max-width: 760px) { .code-card .hero-btn { width: 100%; justify-content: center; } }
+.prose ins { text-decoration: underline; text-underline-offset: 3px; }
