@@ -12,6 +12,13 @@ export function setupMobileMenu() {
         if (open === next) return;
         open = next;
         btn.setAttribute('aria-expanded', String(open));
+        if (open) {
+            // Centre the links between the nav's real bottom edge and the buttons. The nav can sit lower
+            // than its CSS top (iOS Safari's status-bar area), so measure it instead of assuming 80px.
+            const header = document.querySelector('.site-header');
+            header?.classList.remove('nav-away');
+            if (header) menu.style.setProperty('--nav-bottom', `${Math.ceil(header.getBoundingClientRect().bottom)}px`);
+        }
         menu.classList.toggle('is-open', open);
         menu.inert = !open;
         document.documentElement.style.overflow = open ? 'hidden' : '';
