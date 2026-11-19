@@ -65,3 +65,6 @@
     .tl-word[data-year]:hover .tl-sw { color: #8c8c8c !important; }
     .tl-word[data-year]:hover .tl-ul { background: #8c8c8c !important; }
 }
+
+/* Featured items: a small "Featured ↗" button that jumps to the project's case file (js/timeline.js) */
+.tl-it .tl-featured { width: fit-content; margin-top: 4px; }

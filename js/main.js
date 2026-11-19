@@ -10,7 +10,7 @@ import { setupMobileMenu } from './mobile-menu.js?v=20261119a';
 import { setupReveal } from './reveal.js?v=20261119a';
 import { setupQuotes } from './card-grids.js?v=20261119a';
 import { setupEmailPill } from './contact.js?v=20261119a';
-import { setupWorkRail } from './work-rail.js?v=20261119a';
+import { setupProjects } from './projects.js?v=20261119a';
 import { setupHeroFloat } from './hero.js?v=20261119a';
 import { setupDock } from './dock.js?v=20261119a';
 import { setupTimeline } from './timeline.js?v=20261119a';
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupReveal();
     setupQuotes();
     setupEmailPill();
-    setupWorkRail();
+    setupProjects();
     setupHeroFloat();
     setupDock();
     setupTimeline();

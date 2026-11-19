@@ -82,6 +82,12 @@ export default function (config) {
   config.addFilter("except", (posts, url) => posts.filter((post) => post.url !== url));
   config.addFilter("head", (list, n) => list.slice(0, n));
 
+  // A featured project's newest Build log: the first (posts are newest first) published post with
+  // type "Build log" and the same repo. Compared loosely, so "…/Repo/" matches "…/repo".
+  const sameRepo = (a, b) => !!a && !!b && a.trim().toLowerCase().replace(/\/+$/, "") === b.trim().toLowerCase().replace(/\/+$/, "");
+  config.addFilter("buildLogFor", (posts, repo) =>
+    posts.find((post) => post.data.type === "Build log" && !post.data.draft && sameRepo(post.data.repo, repo)));
+
   // "https://github.com/amierlorenz/mieracle-study" -> "amierlorenz/mieracle-study"
   config.addFilter("repoName", (url) => {
     try { return new URL(url).pathname.replace(/^\/|\/$/g, ""); } catch { return url; }

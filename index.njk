@@ -80,50 +80,57 @@
             <div class="tl-scroller" tabindex="0" aria-label="Timeline of work, projects, learning and teaching. Scroll sideways."></div>
         </section>
 
+        {# Featured Projects: one case file per project in _data/projects.js (hand-edited), alternating sides.
+           Screens: a clip in front, two stills behind (MEDIA.md); click a back card to bring it forward
+           (js/projects.js). Build log shows when a published Build log post has the project's repo. #}
         <section id="projects" class="projects" data-bg="#F5F5F5">
-            <div class="work-header">
-                <h2 class="section-title">Featured Projects</h2>
-            </div>
-            <div id="rail-work" class="rail-work">
-                <a class="work-card" href="https://github.com/CodePath-Tech-Exchange-CTEx/ise-genai-galea-digital" target="_blank" rel="noopener">
-                    <div class="work-media">
-                        <img src="https://placehold.co/640x400/ff7e59/ffffff?text=Galea+Digital" alt="Galea Digital">
-                        <div class="work-chip">
-                            <span class="work-chip-gh"><svg width="20" height="20" aria-hidden="true"><use href="#gh-mark"/></svg></span>
-                            <span class="work-chip-label">View on GitHub</span>
-                            <svg class="work-chip-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg>
+            <div class="projects-inner">
+                <div class="work-header">
+                    <h2 class="section-title">Featured Projects</h2>
+                </div>
+                {% for p in projects %}
+                {% set log = collections.posts | buildLogFor(p.repo) %}
+                {% set m = p.media %}
+                <article class="case{% if loop.index0 % 2 %} is-flip{% endif %}" id="proj-{{ p.id }}">
+                    <div class="case-screens case-screens--{{ p.shape }}">
+                        {% if m %}
+                        <button class="case-card" type="button" data-role="front" aria-label="{{ m.lead.alt }}">
+                            {% if m.lead.video %}
+                            <video muted loop playsinline preload="none"{% if m.lead.poster %} poster="{{ m.lead.poster }}"{% endif %} aria-hidden="true"><source src="{{ m.lead.video }}" type="video/mp4"></video>
+                            {% elif m.lead.poster %}
+                            <img src="{{ m.lead.poster }}" alt="" loading="lazy">
+                            {% endif %}
+                        </button>
+                        {% for s in m.stills %}
+                        <button class="case-card" type="button" data-role="{{ 'left' if loop.first else 'right' }}" aria-label="{{ s.alt }}">
+                            {% if s.src %}<img src="{{ s.src }}" alt="" loading="lazy">{% endif %}
+                        </button>
+                        {% endfor %}
+                        {% else %}
+                        {# No media yet: placeholder cards in the right shape #}
+                        <div class="case-card case-card--empty" data-role="front" aria-hidden="true">
+                            <span class="case-dot" style="background:{{ p.color }}"></span>
+                            <span class="case-empty-name">{{ p.name }}</span>
+                            <span class="case-empty-note">Screens coming soon</span>
+                        </div>
+                        <div class="case-card case-card--empty" data-role="left" aria-hidden="true"></div>
+                        <div class="case-card case-card--empty" data-role="right" aria-hidden="true"></div>
+                        {% endif %}
+                    </div>
+                    <div class="case-text">
+                        <p class="case-kicker"><span class="case-dot" style="background:{{ p.color }}"></span>{{ p.kind }} · {{ p.status }}</p>
+                        <h3 class="case-name">{{ p.name }}</h3>
+                        <p class="case-blurb">{{ p.blurb }}</p>
+                        <div class="work-tags">{% for t in p.stack %}<span>{{ t }}</span>{% endfor %}</div>
+                        <div class="case-links">
+                            {% if log %}
+                            <a class="hero-btn hero-btn--resume hero-btn--trail" href="{{ log.url }}?from=proj-{{ p.id }}"><span>Build log</span><svg width="18" height="18" aria-hidden="true"><use href="#arrow-icon"/></svg></a>
+                            {% endif %}
+                            <a class="hero-btn" href="{{ p.repo }}" target="_blank" rel="noopener"><svg width="20" height="20" aria-hidden="true"><use href="#gh-mark"/></svg><span>GitHub</span></a>
                         </div>
                     </div>
-                    <div class="work-title">Galea Digital</div>
-                    <div class="work-tags"><span>Python</span><span>Gemini API</span><span>Streamlit</span><span>pytest + CI</span></div>
-                </a>
-                <a class="work-card" href="https://github.com/amierlorenz/mieracle-study" target="_blank" rel="noopener">
-                    <div class="work-media">
-                        <img src="https://placehold.co/640x400/ffd55b/222222?text=Mieracle+Study" alt="Mieracle Study">
-                        <div class="work-chip">
-                            <span class="work-chip-gh"><svg width="20" height="20" aria-hidden="true"><use href="#gh-mark"/></svg></span>
-                            <span class="work-chip-label">View on GitHub</span>
-                            <svg class="work-chip-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg>
-                        </div>
-                    </div>
-                    <div class="work-title">Mieracle Study</div>
-                    <div class="work-tags"><span>Swift</span><span>SwiftUI</span><span>SM-2 scheduling</span><span>On-device AI</span></div>
-                </a>
-                <a class="work-card" href="https://github.com/amierlorenz/not-lang" target="_blank" rel="noopener">
-                    <div class="work-media">
-                        <img src="https://placehold.co/640x400/4cc6ce/222222?text=Not+Lang" alt="Not Lang">
-                        <div class="work-chip">
-                            <span class="work-chip-gh"><svg width="20" height="20" aria-hidden="true"><use href="#gh-mark"/></svg></span>
-                            <span class="work-chip-label">View on GitHub</span>
-                            <svg class="work-chip-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg>
-                        </div>
-                    </div>
-                    <div class="work-title">Not Lang</div>
-                    <div class="work-tags"><span>Swift</span><span>Gemini API</span><span>Supabase</span><span>SwiftData</span></div>
-                </a>
-            </div>
-            <div class="work-progress-wrap">
-                <div class="work-progress"><div id="work-progress-fill"></div></div>
+                </article>
+                {% endfor %}
             </div>
         </section>
 {# Writing: built from published posts (blog/), so publishing in Pages CMS updates it. The newest

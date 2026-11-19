@@ -370,6 +370,7 @@ export function setupTimelineGraph() {
     const pin = (keys) => { state.pins = new Set(keys); kick(); };
     const toggleOpen = () => { state.open = !state.open; kick(); };
     scroller.addEventListener('click', (e) => {
+        if (e.target.closest('.tl-featured')) return; // jumps to its case file (js/anchors.js); doesn't pin
         const tag = e.target.closest('.tlg-tag');
         if (tag) {
             const o = geo && geo.pinned.find((p) => p.key === tag.dataset.key);
