@@ -1,0 +1,122 @@
+/* ============ Blog pages: All writing (/blog/) and posts (/blog/<slug>/) ============ */
+/* Cards and text links are in css/writing.css. Behaviour: js/blog.js. */
+
+/* Blog pages have no Contact section above the footer, so it needs no dividing line */
+.blog-footer .site-footer { border-top: 0; }
+
+/* Phones, post pages: the nav slides away while reading down and returns on any scroll up (js/post-page.js) */
+.site-header.nav-away { transform: translateY(calc(-100% - 24px)); }
+
+/* ============ All writing ============ */
+/* White header band below the nav: Back, big serif title, one-line lede */
+.blog-band { margin-top: 96px; padding: clamp(40px, 5vw, 64px) 24px clamp(40px, 5vw, 56px); background: #fff; }
+.blog-band-inner { max-width: 1132px; margin: 0 auto; }
+.blog-band .back-link { margin-bottom: 28px; }
+.blog-title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(72px, 11vw, 160px); line-height: .9; }
+.blog-lede { max-width: 560px; margin-top: 20px; font-size: clamp(18px, 1.6vw, 20px); line-height: 1.5; color: #444; }
+.blog-body { max-width: 1180px; margin: 0 auto; padding: clamp(32px, 4vw, 48px) 24px clamp(64px, 10vw, 120px); }
+
+/* Topic chips: white pills, dark when selected, a hover ring in the topic's colour */
+.topic-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: clamp(32px, 4vw, 48px); }
+.topic-chips[hidden] { display: none; }
+.topic-chips button {
+    --base: 0 1px 2px rgba(0,0,0,.07), 0 4px 14px rgba(0,0,0,.10);
+    display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px;
+    border: 0; border-radius: 999px; background: #fff; color: #222; cursor: pointer;
+    font-size: 14px; font-weight: 600;
+    box-shadow: var(--base), 0 0 0 var(--hs, 0px) var(--tc, rgba(34,34,34,.10));
+    transition: box-shadow .4s cubic-bezier(.22,.8,.2,1);
+}
+@media (hover: hover) { .topic-chips button:hover { --hs: 5px; } }
+.topic-chips button[aria-pressed="true"] { background: #222; color: #fff; }
+.topic-chips i { width: 8px; height: 8px; border-radius: 50%; }
+.chip-count { font: 12px 'Fira Code', monospace; opacity: .55; }
+
+/* Card grid: 3 columns, 2 on tablets, 1 on phones (also used by More writing) */
+.post-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 24px; }
+@media (max-width: 1000px) { .post-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .post-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* No posts yet */
+.blog-empty {
+    max-width: 640px; display: flex; flex-direction: column; gap: 14px;
+    padding: clamp(24px, 3vw, 40px); border-radius: 28px; background: #fff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+}
+
+/* ============ Post ============ */
+/* Yellow header band below the nav */
+.post-band { margin-top: 96px; padding: clamp(40px, 5vw, 64px) 24px clamp(48px, 6vw, 72px); background: #ffd55b; }
+.post-band-inner { max-width: 1104px; margin: 0 auto; }
+.post-band .back-link { margin-bottom: 28px; color: #5c4a10; text-decoration-color: rgba(34,34,34,.35); }
+.post-kicker { margin-bottom: 14px; font: 13px/1.4 'Fira Code', monospace; }
+.post-kicker a { text-decoration: underline; text-underline-offset: 3px; }
+.draft-badge { margin-right: 8px; padding: 2px 8px; border-radius: 6px; background: #222; color: #ffd55b; }
+.post-heading { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(48px, 7vw, 96px); line-height: .95; text-wrap: pretty; }
+.post-lede { margin-top: 20px; max-width: 840px; font-size: clamp(19px, 1.8vw, 22px); line-height: 1.45; text-wrap: pretty; }
+.post-info { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 24px; font: 13px 'Fira Code', monospace; }
+.post-info span { display: inline-flex; align-items: center; gap: 8px; }
+.post-info i { width: 9px; height: 9px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); }
+
+/* Body: an ~840px reading column with the contents rail to its left (desktop only) */
+.post-layout { max-width: 1152px; margin: 0 auto; padding: 56px 24px 0; display: grid; grid-template-columns: 200px minmax(0, 840px); gap: 64px; }
+.post-main { min-width: 0; }
+.post-cover { display: block; width: 100%; height: auto; margin-bottom: 48px; border-radius: 28px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+
+/* ---- Side rail: contents with a reading tracker, and Back to top ---- */
+.post-rail { position: sticky; top: 110px; align-self: start; display: flex; flex-direction: column; gap: 28px; }
+.rail-label { display: block; margin-bottom: 10px; font: 13px/1.4 'Fira Code', monospace; color: #666; }
+.toc-list { position: relative; display: flex; flex-direction: column; }
+/* Grey track and yellow fill down the list's left edge; a dot rides the end of the fill */
+.toc-list::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; border-radius: 2px; background: #DDD; }
+.toc-fill { position: absolute; left: 0; top: 0; width: 2px; height: 0; border-radius: 2px; background: #ffd55b; transition: height .15s linear; }
+.toc-fill::after {
+    content: ""; position: absolute; left: 50%; bottom: -5px; width: 10px; height: 10px; margin-left: -5px;
+    border-radius: 50%; background: #ffd55b; box-shadow: 0 0 0 3px #F5F5F5;
+}
+.toc-list a { position: relative; padding: 7px 0 7px 16px; font-size: 15px; line-height: 1.35; color: #999; transition: color .3s ease, transform .4s cubic-bezier(.22,.8,.2,1); }
+.toc-list a.is-read { color: #444; }
+.toc-list a.is-on { color: #222; font-weight: 600; transform: translateX(4px); }
+@media (hover: hover) { .toc-list a:hover { color: #222; } }
+.rail-top { font: 13px 'Fira Code', monospace; color: #666; }
+/* Tablets and phones: one column, no rail (after the rail's own rules so this wins) */
+@media (max-width: 960px) {
+    .post-layout { grid-template-columns: minmax(0, 1fr); }
+    .post-rail { display: none; }
+}
+
+/* ---- Prose: everything Markdown (or the editor) can produce ---- */
+.prose { font-size: 19px; line-height: 1.7; color: #2a2a2a; }
+.prose > * + * { margin-top: 1.1em; }
+.prose h2 { margin-top: 2em; font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(34px, 3.4vw, 44px); line-height: 1.05; scroll-margin-top: 110px; }
+.prose h3 { margin-top: 1.8em; font-size: 21px; font-weight: 600; line-height: 1.3; scroll-margin-top: 110px; }
+.prose a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.prose strong { font-weight: 600; }
+.prose ul, .prose ol { padding-left: 1.3em; }
+.prose li + li { margin-top: .4em; }
+.prose li::marker { color: #999; }
+.prose code { padding: .15em .4em; border-radius: 6px; background: #fff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); font: .86em 'Fira Code', monospace; }
+.prose pre { overflow-x: auto; padding: 22px 24px; border-radius: 20px; background: #222; color: #f5f5f5; font-size: 15px; line-height: 1.6; }
+.prose pre code { padding: 0; background: none; box-shadow: none; color: inherit; font-size: inherit; }
+.prose blockquote { padding: .1em 0 .1em 1.1em; border-left: 3px solid #ffd55b; font-family: 'Instrument Serif', serif; font-size: 28px; line-height: 1.25; color: #222; }
+.prose img { display: block; max-width: 100%; height: auto; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+.prose hr { height: 1px; margin: 2.4em 0; border: 0; background: #DDD; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 16px; }
+.prose th { padding: 0 16px 10px 0; border-bottom: 1px solid #222; text-align: left; font: 500 12px 'Fira Code', monospace; text-transform: uppercase; letter-spacing: .06em; color: #888; }
+.prose td { padding: 12px 16px 12px 0; border-bottom: 1px solid #DDD; }
+@media (max-width: 760px) {
+    .prose { font-size: 18px; }
+    .prose blockquote { font-size: 24px; }
+    .prose table { display: block; overflow-x: auto; }
+}
+
+/* ---- End matter: the code card, More writing ---- */
+.code-card {
+    margin-top: 64px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px;
+    padding: clamp(24px, 3vw, 36px); border-radius: 28px; background: #fff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+}
+.code-card .rail-label { margin-bottom: 8px; }
+.code-card-name { font-family: 'Instrument Serif', serif; font-size: 40px; line-height: 1; overflow-wrap: anywhere; }
+.more-writing { max-width: 1180px; margin: clamp(80px, 10vw, 140px) auto 0; padding: 0 24px clamp(64px, 10vw, 120px); }
+.more-title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(44px, 5vw, 72px); line-height: .95; }
+.more-writing .post-grid { margin-top: 36px; }
+@media (max-width: 760px) { .code-card .hero-btn { width: 100%; justify-content: center; } }

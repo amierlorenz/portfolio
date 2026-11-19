@@ -1,0 +1,46 @@
+---
+# All writing (/blog/). Lives outside blog/ so the posts' directory data (layout, permalink) and
+# Pages CMS (which lists blog/) both leave it alone.
+permalink: /blog/
+layout: layouts/blog-base.njk
+title: Writing
+description: Build logs from my projects, notes from teaching and learning, and the occasional essay.
+current: blog
+---
+{% from "macros/post-card.njk" import postCard %}
+{% set posts = collections.posts %}
+{% set topicList = posts | topicCounts %}
+            <header class="blog-band">
+                <div class="blog-band-inner">
+                    <a class="text-link back-link" href="/{{ '#writing' if posts | length }}"><svg width="18" height="18" aria-hidden="true"><use href="#arrow-icon"/></svg> <span>Back</span></a>
+                    <h1 class="blog-title">Writing</h1>
+                    <p class="blog-lede">{{ description }}</p>
+                </div>
+            </header>
+
+            <div class="blog-body">
+                {% if posts | length %}
+                {# Topic filter: only topics that have posts, and only once there are two to choose between.
+                   Hidden until js/topic-filter.js wires it up (without JS every post just shows). #}
+                {% if topicList | length > 1 %}
+                <div class="topic-chips" role="group" aria-label="Filter by topic" hidden>
+                    <button type="button" data-topic="" aria-pressed="true">All <span class="chip-count">{{ posts | length }}</span></button>
+                    {% for tp in topicList %}
+                    {% set t = tp.name | topic %}
+                    <button type="button" data-topic="{{ tp.name }}" aria-pressed="false" style="--tc:{{ t.ring }}"><i style="background:{{ t.color }}"></i>{{ tp.name }} <span class="chip-count">{{ tp.count }}</span></button>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="post-grid">
+                    {% for post in posts %}
+                    {{ postCard(post, post.url) }}
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="blog-empty">
+                    <span class="post-topic"><i style="background:#ffd55b"></i>Coming soon</span>
+                    <p class="post-title">The first post is on its way.</p>
+                    <p class="post-dek">Build logs from my projects, notes from teaching and learning, and the occasional essay will live here.</p>
+                </div>
+                {% endif %}
+            </div>

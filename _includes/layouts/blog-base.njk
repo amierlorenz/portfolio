@@ -1,0 +1,47 @@
+{#- Shell for every blog page (/blog/ and each post): the homepage's head, nav (docked, links back to
+    the homepage's sections) and footer. Pages pass title, description, cover and current in front matter. -#}
+{% set root = "/" %}
+{% set docked = true %}
+{% set pageTitle = (title + " · " + site.name) if title else site.name %}
+{% set pageDescription = description or "Writing by Amier Lorenz Davis: build logs, teaching notes and essays." %}
+{% set pageUrl = site.url + page.url %}
+<!DOCTYPE html>
+<html lang="en" class="nav-docked">
+<head>
+{% include "partials/head-meta.njk" %}
+    <!-- Search engines and Medium imports: this page's one true address -->
+    <link rel="canonical" href="{{ pageUrl }}">
+    <meta property="og:site_name" content="{{ site.name }}">
+    <meta property="og:type" content="{{ ogType or 'website' }}">
+    <meta property="og:title" content="{{ title or site.name }}">
+    <meta property="og:description" content="{{ pageDescription }}">
+    <meta property="og:url" content="{{ pageUrl }}">
+    <meta property="og:image" content="{{ (cover or '/assets/headshot.webp') | fullUrl(site.url) }}">
+    <meta name="twitter:card" content="{{ 'summary_large_image' if cover else 'summary' }}">
+    <link rel="alternate" type="application/atom+xml" title="Writing · {{ site.name }}" href="/feed.xml">
+    {% if draft %}<meta name="robots" content="noindex">{% endif %}
+    <link rel="stylesheet" href="/css/base.css?v={{ site.v }}">
+    <link rel="stylesheet" href="/css/buttons.css?v={{ site.v }}">
+    <link rel="stylesheet" href="/css/nav.css?v={{ site.v }}">
+    <link rel="stylesheet" href="/css/hero.css?v={{ site.v }}">
+    <link rel="stylesheet" href="/css/contact.css?v={{ site.v }}">
+    <link rel="stylesheet" href="/css/writing.css?v={{ site.v }}">
+    <link rel="stylesheet" href="/css/blog.css?v={{ site.v }}">
+    <script type="module" src="/js/blog.js?v={{ site.v }}"></script>
+</head>
+<body>
+    <div class="page">
+{% include "partials/nav.njk" %}
+
+        <main>
+{{ content | safe }}
+        </main>
+
+        <footer class="contact-dark blog-footer">
+{% include "partials/footer.njk" %}
+        </footer>
+    </div>
+
+{% include "partials/sprite.njk" %}
+</body>
+</html>
