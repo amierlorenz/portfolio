@@ -7,7 +7,7 @@
 // "so far" and this year take the present perfect ("What I've built"); a finished year takes the
 // past tense ("What I did in 2025"). "I'm"/"I've"/"I" and the verb roll to match.
 // The entries themselves live in data/timeline.js.
-import { ITEMS } from '../data/timeline.js?v=20261112a';
+import { ITEMS } from '../data/timeline.js?v=20261119a';
 
 export function setupTimeline() {
     const section = document.getElementById('timeline');
@@ -265,7 +265,8 @@ export function setupTimeline() {
                 <span class="tl-when">${when(it)}</span>
                 <h4>${it.title}</h4>
                 <span class="tl-org">${it.org}</span>
-                <p>${it.text}</p>
+                <p>${it.text}</p>${it.featured ? `
+                <a class="hero-btn hero-btn--sm tl-featured" href="#proj-${it.featured}">Featured <svg width="16" height="16" aria-hidden="true"><use href="#arrow-ne-icon"/></svg></a>` : ''}
               </div>`).join('')}${gi === groups.length - 1 && showsNow() ? '<div class="tl-now"><span class="tl-ring"></span><span class="tl-now-label">now</span></div>' : ''}</div></div>`).join('')}</div>`;
     }
     // The line runs from the first dot's center to the last dot's (or the "now" ring's).

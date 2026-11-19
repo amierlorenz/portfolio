@@ -1,0 +1,244 @@
+---
+# The homepage. Everything is hand-written HTML except the Writing section, which lists published posts.
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% set root = "" %}{% set pageTitle = site.name %}{% set pageDescription = "CS Student & Developer | AI/ML Enthusiast | Swift Teacher" %}
+{% include "partials/head-meta.njk" %}
+    <!-- One stylesheet per section, each with its own phone rules; base first. ?v= busts phone caches after a deploy (see js/main.js) -->
+    <link rel="stylesheet" href="css/base.css?v={{ site.v }}">
+    <link rel="stylesheet" href="css/buttons.css?v={{ site.v }}">
+    <link rel="stylesheet" href="css/nav.css?v={{ site.v }}">
+    <link rel="stylesheet" href="css/hero.css?v={{ site.v }}">
+    <link rel="stylesheet" href="css/about.css?v={{ site.v }}">
+    <link rel="stylesheet" href="css/projects.css?v={{ site.v }}">
+    <link rel="stylesheet" href="css/writing.css?v={{ site.v }}">
+    <link rel="stylesheet" href="css/timeline.css?v={{ site.v }}">
+    <link rel="stylesheet" href="css/timeline-graph.css?v={{ site.v }}">
+    <link rel="stylesheet" href="css/skills.css?v={{ site.v }}">
+    <link rel="stylesheet" href="css/contact.css?v={{ site.v }}">
+    <script type="module" src="js/main.js?v={{ site.v }}"></script>
+</head>
+<body>
+    <div class="page">
+{% include "partials/nav.njk" %}
+
+        <!-- Hero: each word rises in after its --d delay -->
+        <section id="top" class="hero" data-bg="#F5F5F5">
+            <h1 class="hero-title" data-px="0.08">
+                <span class="hero-line">
+                <span class="hero-word hero-word--anchor" style="--d:.05s">CS<span class="hero-star hero-star--cs" aria-hidden="true" data-px="-0.35">
+                    <svg class="fl" viewBox="0 0 24 24" aria-hidden="true"><path fill="#ffd55b" d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6L12 17l-5.9 3.2 1.3-6.6L2.5 9l6.6-.8z"/></svg>
+                </span></span>
+                <span class="hero-word" style="--d:.12s">Student</span>
+                <span class="hero-word hero-at" style="--d:.19s">@</span>
+                <span class="hero-word" style="--d:.26s">Hampton</span>
+                <span class="hero-word" style="--d:.33s">University</span>
+                </span>
+                <span class="hero-line">
+                <span class="hero-word" style="--d:.40s">Building,</span>
+                <span class="hero-word hero-word--nowrap" style="--d:.47s"><span class="hero-brace hero-brace--open fl" aria-hidden="true">{</span>Learning<span class="hero-brace hero-brace--close fl" aria-hidden="true">}</span>,</span>
+                <span class="hero-word hero-word--anchor" style="--d:.54s">Teaching<span class="hero-star hero-star--teach" aria-hidden="true" data-px="-0.28">
+                    <svg class="fl" viewBox="0 0 24 24" aria-hidden="true"><path fill="#ff7e59" d="M12 2l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6L12 17l-5.9 3.2 1.3-6.6L2.5 9l6.6-.8z"/></svg>
+                </span></span>
+                </span>
+            </h1>
+            <!-- Links under the title. Each one pops into its twin in the nav once the nav reaches this
+                 row, and back out on the way up (js/dock.js). The slot stays put while the link inside
+                 shrinks, so the observer always measures the row's real position. -->
+            <div class="hero-links">
+                <span class="hero-slot"><a class="hero-btn hero-btn--youtube dock-pop" data-dock="youtube" href="https://www.youtube.com/@amierlorenz" target="_blank" rel="noopener"><svg width="22" height="22" aria-hidden="true"><use href="#yt-mark"/></svg><span>YouTube</span></a></span>
+                <span class="hero-slot"><a class="hero-btn dock-pop" data-dock="medium" href="{{ site.medium }}" target="_blank" rel="noopener"><svg width="18" height="18" aria-hidden="true"><use href="#medium-mark"/></svg><span>Medium</span></a></span>
+                <span class="hero-slot"><a class="hero-btn dock-pop" data-dock="github" href="https://github.com/amierlorenz" target="_blank" rel="noopener"><svg width="20" height="20" aria-hidden="true"><use href="#gh-mark"/></svg><span>GitHub</span></a></span>
+                <span class="hero-slot"><a class="hero-btn hero-btn--resume dock-pop" data-dock="resume" href="resume.pdf" download><svg width="18" height="18" aria-hidden="true"><use href="#download-icon"/></svg><span>Resume</span></a></span>
+            </div>
+        </section>
+
+        <section id="about" class="about" data-bg="#FFFFFF">
+            <!-- About intro: yellow band, photo standing on the band's bottom edge -->
+            <div class="about-band">
+                <div class="about-band-inner">
+                    <img src="assets/headshot.webp" alt="Amier Lorenz Davis" width="900" height="900">
+                    <div class="about-band-text">
+                        <h2 class="about-title">Hi, I'm Amier</h2>
+                        <p class="about-lede">
+                            I'm a Computer Science student at Hampton University with a focus on AI/ML.
+                            Currently learning how to contribute to Open Source through CodePath AI301,
+                            and teaching Swift through the HU Swift Academy.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline: title and entries are built by js/timeline.js from data/timeline.js -->
+        <section id="timeline" class="timeline" data-bg="#FFFFFF">
+            <div class="tl-head">
+                <h2 class="tl-title" aria-live="polite">What I'm doing right now</h2>
+            </div>
+            <div class="tl-scroller" tabindex="0" aria-label="Timeline of work, projects, learning and teaching. Scroll sideways."></div>
+        </section>
+
+        {# Featured Projects: one case file per project in _data/projects.js (hand-edited), alternating sides.
+           Screens: a clip in front, two stills behind (MEDIA.md); click a back card to bring it forward
+           (js/projects.js). Build log shows when a published Build log post has the project's repo. #}
+        <section id="projects" class="projects" data-bg="#F5F5F5">
+            <div class="projects-inner">
+                <div class="work-header">
+                    <h2 class="section-title">Featured Projects</h2>
+                </div>
+                {% for p in projects %}
+                {% set log = collections.posts | buildLogFor(p.repo) %}
+                {% set m = p.media %}
+                <article class="case{% if loop.index0 % 2 %} is-flip{% endif %}" id="proj-{{ p.id }}">
+                    <div class="case-screens case-screens--{{ p.shape }}">
+                        {% if m %}
+                        <button class="case-card" type="button" data-role="front" aria-label="{{ m.lead.alt }}">
+                            {% if m.lead.video %}
+                            <video muted loop playsinline preload="none"{% if m.lead.poster %} poster="{{ m.lead.poster }}"{% endif %} aria-hidden="true"><source src="{{ m.lead.video }}" type="video/mp4"></video>
+                            {% elif m.lead.poster %}
+                            <img src="{{ m.lead.poster }}" alt="" loading="lazy">
+                            {% endif %}
+                        </button>
+                        {% for s in m.stills %}
+                        <button class="case-card" type="button" data-role="{{ 'left' if loop.first else 'right' }}" aria-label="{{ s.alt }}">
+                            {% if s.src %}<img src="{{ s.src }}" alt="" loading="lazy">{% endif %}
+                        </button>
+                        {% endfor %}
+                        {% else %}
+                        {# No media yet: placeholder cards in the right shape #}
+                        <div class="case-card case-card--empty" data-role="front" aria-hidden="true">
+                            <span class="case-dot" style="background:{{ p.color }}"></span>
+                            <span class="case-empty-name">{{ p.name }}</span>
+                            <span class="case-empty-note">Screens coming soon</span>
+                        </div>
+                        <div class="case-card case-card--empty" data-role="left" aria-hidden="true"></div>
+                        <div class="case-card case-card--empty" data-role="right" aria-hidden="true"></div>
+                        {% endif %}
+                    </div>
+                    <div class="case-text">
+                        <p class="case-kicker"><span class="case-dot" style="background:{{ p.color }}"></span>{{ p.kind }} · {{ p.status }}</p>
+                        <h3 class="case-name">{{ p.name }}</h3>
+                        <p class="case-blurb">{{ p.blurb }}</p>
+                        <div class="work-tags">{% for t in p.stack %}<span>{{ t }}</span>{% endfor %}</div>
+                        <div class="case-links">
+                            {% if log %}
+                            <a class="hero-btn hero-btn--resume hero-btn--trail" href="{{ log.url }}?from=proj-{{ p.id }}"><span>Build log</span><svg width="18" height="18" aria-hidden="true"><use href="#arrow-icon"/></svg></a>
+                            {% endif %}
+                            <a class="hero-btn" href="{{ p.repo }}" target="_blank" rel="noopener"><svg width="20" height="20" aria-hidden="true"><use href="#gh-mark"/></svg><span>GitHub</span></a>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+{# Writing: built from published posts (blog/), so publishing in Pages CMS updates it. The newest
+   post is featured; up to four more are listed. With no posts the section isn't there at all. -#}
+        {% from "macros/post-card.njk" import postCard %}
+        {% set posts = collections.posts %}
+        {% if posts | length %}
+
+        <section id="writing" class="writing">
+            <div class="writing-inner">
+                <div class="section-head">
+                    <h2 class="section-title">Writing</h2>
+                    <a class="text-link" href="/blog/">All writing <svg width="18" height="18" aria-hidden="true"><use href="#arrow-icon"/></svg></a>
+                </div>
+                <div class="writing-grid{% if posts | length == 1 %} is-solo{% endif %}">
+                    {{ postCard(posts[0], posts[0].url + "?from=writing", true, "post-card writing-lead") }}
+                    {% if posts | length > 1 %}
+                    <div class="writing-list">
+                        {% for post in posts | head(5) %}
+                        {% if not loop.first %}
+                        {% set t = post.data.topic | topic %}
+                        <a class="writing-row" href="{{ post.url }}?from=writing" style="--tt:{{ t.text }}">
+                            <span class="post-title">{{ post.data.title }}</span>
+                            <span class="post-meta">{{ post.date | monthYear }}{% if post.data.type %} · {{ post.data.type }}{% endif %}</span>
+                        </a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <section id="skills" class="skills" data-bg="#FFFFFF">
+            <div class="skills-inner">
+                <div class="section-intro">
+                    <h2 class="section-title">Skills & Technologies</h2>
+                    <p class="section-lede">
+                        Strong software engineering foundations, with a specialization in native mobile
+                        development and leveraging Agentic AI tools to improve development quality and efficiency.
+                    </p>
+                </div>
+                <div id="quote-grid" data-reveal>
+                    <div class="quote-card" tabindex="0">
+                        <span class="quote-mark quote-mark--brace" aria-hidden="true">{ }</span>
+                        <div class="quote-lower">
+                            <blockquote class="quote-main">Swift, Python, Kotlin, Java &amp; JavaScript</blockquote>
+                            <span class="quote-label">Languages</span>
+                        </div>
+                    </div>
+                    <div class="quote-card" tabindex="0">
+                        <span class="quote-mark" aria-hidden="true">
+                            <svg class="quote-sparkle" viewBox="0 0 100 100"><path transform="translate(50,50)" d="M0 -46 C4.8 -17.5 16.5 -5.8 46 0 C16.5 5.8 4.8 17.5 0 46 C-4.8 17.5 -16.5 5.8 -46 0 C-16.5 -5.8 -4.8 -17.5 0 -46 Z" fill="#4cc6ce"/></svg>
+                        </span>
+                        <div class="quote-lower">
+                            <blockquote class="quote-main">Foundation Models, Gemini API, PyTorch &amp; the on-device AI stack</blockquote>
+                            <span class="quote-label">Technologies</span>
+                        </div>
+                    </div>
+                    <div class="quote-card" tabindex="0">
+                        <span class="quote-mark" aria-hidden="true">
+                            <svg class="quote-tools" viewBox="0 0 64 64">
+                                <g fill="#ffd55b" transform="translate(-1 3) rotate(45 32 32) translate(32 34) scale(.86) translate(-32 -34)">
+                                    <path d="M28 22 H36 L34 70 Q32 72.5 30 70 Z"/>
+                                    <path d="M25 11 H40 V25 H25 Z"/>
+                                    <path d="M40 13.5 H52 V22.5 H40 Z"/>
+                                    <rect x="51" y="11" width="6" height="14" rx="1.5"/>
+                                    <path d="M25 11 C16 11 9 15 4 25 C11 20 18 19.5 25 21 Z"/>
+                                </g>
+                            </svg>
+                        </span>
+                        <div class="quote-lower">
+                            <blockquote class="quote-main">SwiftUI, SwiftData, CloudKit, Jetpack Compose &amp; Xcode</blockquote>
+                            <span class="quote-label">Tools</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-dark">
+            <div class="contact-inner">
+                <div class="section-intro">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <p class="section-lede contact-lede">
+                        Interested in collaborating, have a project or opportunity you'd like to discuss,
+                        or just want to chat? Feel free to reach out through any of the following channels.
+                    </p>
+                </div>
+                <div class="contact-pills">
+                    <!-- The address is the button: click copies it (js/contact.js) -->
+                    <button id="email-button" class="contact-btn contact-btn--email" type="button" data-email="amierLdavis@gmail.com" aria-label="Copy email address amierLdavis@gmail.com">
+                        <span class="contact-copy-icon" aria-hidden="true">
+                            <svg class="contact-copy-idle" width="16" height="16"><use href="#copy-icon"/></svg>
+                            <svg class="contact-copy-done" width="16" height="16"><use href="#check-icon"/></svg>
+                        </span>
+                        <span>amierLdavis@gmail.com</span>
+                    </button>
+                    <a class="contact-btn contact-btn--linkedin" href="https://www.linkedin.com/in/amierlorenz/" target="_blank" rel="noopener"><svg width="18" height="18" aria-hidden="true"><use href="#linkedin-mark"/></svg><span>LinkedIn</span></a>
+                    <a class="contact-btn contact-btn--chat" href="https://calendar.app.google/cnMKfDF11F9o77mK7" target="_blank" rel="noopener"><svg width="20" height="20" aria-hidden="true"><use href="#calendar-mark"/></svg><span>Book a Chat</span></a>
+                    <span id="email-status" class="visually-hidden" role="status"></span>
+                </div>
+            </div>
+{% include "partials/footer.njk" %}
+        </section>
+    </div>
+
+{% include "partials/sprite.njk" %}
+</body>
+</html>

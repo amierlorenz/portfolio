@@ -1,0 +1,84 @@
+# Pages CMS (app.pagescms.org): edits the blog posts in blog/ through GitHub. Every save is a commit,
+# which starts the deploy Action. Only the blog is editable here; the rest of the site is hand-edited.
+# Field reference: https://pagescms.org/docs/configuration
+
+# Uploaded images go to media/blog/ in the repo and are written into posts as /media/blog/<file>
+media:
+  input: media/blog
+  output: /media/blog
+  categories: [image]
+  rename: safe
+
+content:
+  - name: posts
+    label: Blog
+    type: collection
+    path: blog
+    format: yaml-frontmatter
+    # The file name becomes the URL (/blog/<file name>/), so it's set once, when the post is created.
+    # {title} is the slugified title ("Test Draft" -> test-draft.md)
+    filename:
+      template: "{title}.md"
+      field: create
+    # Not a post: tells Eleventy how to build the posts
+    exclude: [blog.11tydata.js]
+    view:
+      primary: title
+      fields: [title, date, type, draft]
+      sort: [date, title]
+      search: [title, description]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: Summary
+        type: text
+        description: One or two sentences. Shown on the post's card and to search engines (about 160 characters).
+        options:
+          maxlength: 200
+      - name: date
+        label: Date
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: type
+        label: Type
+        type: select
+        required: true
+        default: Notes
+        options:
+          values: [Story, Reflection, Dev log, Build log, Notes, Blog]
+      - name: topic
+        label: Topic
+        type: select
+        required: true
+        description: A new topic needs one line in _data/topics.js for its colour (it shows grey until then).
+        options:
+          values: [AI, Swift, Teaching, Career, Open source]
+      - name: repo
+        label: GitHub repo
+        type: string
+        description: Optional. A repo URL like https://github.com/amierlorenz/mieracle-study. Adds a GitHub link and code card; a Build log with a featured project's repo becomes that project's Build log button.
+        pattern:
+          regex: "^(https://github\\.com/[^/\\s]+/[^/\\s]+/?)?$"
+          message: Use a GitHub repo URL, like https://github.com/amierlorenz/mieracle-study
+      - name: cover
+        label: Cover image
+        type: image
+        description: Optional. Without one, the card shows the topic and title on white.
+      - name: draft
+        label: Draft
+        type: boolean
+        default: true
+        description: Drafts are saved to GitHub but never appear on the site. Turn off to publish.
+      - name: body
+        label: Body
+        type: rich-text
+        description: Use Heading 2 for sections (they become the contents rail). The post's title is already the page's Heading 1.
+        options:
+          format: markdown

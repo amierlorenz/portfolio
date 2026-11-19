@@ -13,7 +13,7 @@
 //   - End months show on the date row where branches merge, one spot per date (the gap widens if
 //     they don't fit). With a past year selected, branches running past it fade out after the last
 //     card; ones ending in a later year say so at the end of their branch ("→ May 2026").
-import { ITEMS } from '../data/timeline.js?v=20261112a';
+import { ITEMS } from '../data/timeline.js?v=20261119a';
 
 const NS = 'http://www.w3.org/2000/svg';
 const BY = Object.fromEntries(ITEMS.map((it) => [it.title, it]));
@@ -370,6 +370,7 @@ export function setupTimelineGraph() {
     const pin = (keys) => { state.pins = new Set(keys); kick(); };
     const toggleOpen = () => { state.open = !state.open; kick(); };
     scroller.addEventListener('click', (e) => {
+        if (e.target.closest('.tl-featured')) return; // jumps to its case file (js/anchors.js); doesn't pin
         const tag = e.target.closest('.tlg-tag');
         if (tag) {
             const o = geo && geo.pinned.find((p) => p.key === tag.dataset.key);

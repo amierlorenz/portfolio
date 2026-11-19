@@ -1,0 +1,21 @@
+{#- One post as a card: art (the cover image, or a white card with the topic dot and title), then
+    "Mon YYYY · Type · N min", the title and the summary. Hovering rings the art and tints the text in
+    the topic's colour (--tc, --tt).
+    href: where the card goes (the homepage adds ?from=writing so the post's Back returns there).
+    big:  the homepage's featured post. -#}
+{% macro postCard(post, href, big = false, class = "post-card") %}
+{% set t = post.data.topic | topic %}
+<a class="{{ class }}{% if big %} is-big{% endif %}" href="{{ href }}" data-topic="{{ post.data.topic }}" style="--tc:{{ t.ring }};--tt:{{ t.text }}">
+    {% if post.data.cover %}
+    <span class="post-art post-art--img"><img src="{{ post.data.cover }}" alt="" loading="lazy"></span>
+    {% else %}
+    <span class="post-art">
+        <span class="post-topic"><i style="background:{{ t.color }}"></i>{{ post.data.topic or post.data.type }}</span>
+        <span class="post-art-title">{{ post.data.title }}</span>
+    </span>
+    {% endif %}
+    <span class="post-meta">{{ post.date | monthYear }}{% if post.data.type %} · {{ post.data.type }}{% endif %} · {{ post.inputPath | readingTime }} min{% if post.data.draft %} · Draft{% endif %}</span>
+    <span class="post-title">{{ post.data.title }}</span>
+    {% if post.data.description %}<span class="post-dek">{{ post.data.description }}</span>{% endif %}
+</a>
+{% endmacro %}

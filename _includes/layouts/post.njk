@@ -1,0 +1,77 @@
+---
+layout: layouts/blog-base.njk
+ogType: article
+---
+{#- One post (/blog/<slug>/). Yellow header band, then the body with a contents rail beside it (desktop),
+    the code card when the post has a repo, and More writing. Behaviour lives in js/post-page.js. -#}
+{% from "macros/post-card.njk" import postCard %}
+{% set t = topic | topic %}
+{% set body = content | headingIds %}
+{% set sections = body | toc %}
+{% set others = collections.posts | except(page.url) %}
+            <header class="post-band">
+                <div class="post-band-inner">
+                    {# Says "All writing"; js/post-page.js turns it into "Back" when you came from the homepage #}
+                    <a class="text-link back-link" href="/blog/" data-back><svg width="18" height="18" aria-hidden="true"><use href="#arrow-icon"/></svg> <span>All writing</span></a>
+                    <p class="post-kicker">
+                        {% if draft %}<span class="draft-badge">Draft: only visible in local preview</span> {% endif %}
+                        {{ type or "Post" }}{% if repo %} · <a href="{{ repo }}" target="_blank" rel="noopener">GitHub <svg width="12" height="12" aria-hidden="true"><use href="#arrow-ne-icon"/></svg></a>{% endif %}
+                    </p>
+                    <h1 class="post-heading">{{ title }}</h1>
+                    {% if description %}<p class="post-lede">{{ description }}</p>{% endif %}
+                    <p class="post-info">
+                        <time datetime="{{ page.date | isoDate }}">{{ page.date | longDate }}</time>
+                        <span>{{ page.inputPath | readingTime }} min read</span>
+                        {% if topic %}<span><i style="background:{{ t.color }}"></i>{{ topic }}</span>{% endif %}
+                    </p>
+                </div>
+            </header>
+
+            <article class="post-layout">
+                <aside class="post-rail">
+                    {% if sections | length %}
+                    <nav class="toc" aria-label="Contents">
+                        <span class="rail-label">Contents</span>
+                        <div class="toc-list">
+                            <span class="toc-fill" aria-hidden="true"></span>
+                            {% for s in sections %}
+                            {# s.text is the heading's own (already escaped) HTML with tags removed #}
+                            <a href="#{{ s.id }}">{{ s.text | safe }}</a>
+                            {% endfor %}
+                        </div>
+                    </nav>
+                    {% endif %}
+                    <a class="rail-top" href="#" data-top>Back to top ↑</a>
+                </aside>
+
+                <div class="post-main">
+                    {% if cover %}<img class="post-cover" src="{{ cover }}" alt="">{% endif %}
+                    <div class="prose">
+{{ body | safe }}
+                    </div>
+
+                    {% if repo %}
+                    <aside class="code-card">
+                        <div>
+                            <span class="rail-label">The code</span>
+                            <p class="code-card-name">{{ repo | repoName }}</p>
+                        </div>
+                        <a class="hero-btn" href="{{ repo }}" target="_blank" rel="noopener"><svg width="20" height="20" aria-hidden="true"><use href="#gh-mark"/></svg><span>View on GitHub</span></a>
+                    </aside>
+                    {% endif %}
+                </div>
+            </article>
+
+            <section class="more-writing">
+                <div class="section-head">
+                    {% if others | length %}<h2 class="more-title">More writing</h2>{% endif %}
+                    <a class="text-link" href="/blog/">All writing <svg width="18" height="18" aria-hidden="true"><use href="#arrow-icon"/></svg></a>
+                </div>
+                {% if others | length %}
+                <div class="post-grid">
+                    {% for post in others | head(3) %}
+                    {{ postCard(post, post.url) }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </section>
