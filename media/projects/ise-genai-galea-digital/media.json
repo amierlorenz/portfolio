@@ -1,0 +1,8 @@
+{
+  "shape": "window",
+  "alt": {
+    "lead": "Activity page: opening Edit Goal, lowering the daily calorie target from 500 to 400 and saving, so the progress bar fills to 100% with “Goal crushed! Great work.”",
+    "still-1": "Home page welcoming back a sample user, with a Gemini-written coach insight, a photo, the most recent post and a recent workout summary",
+    "still-2": "GitHub Actions run of the team's Python CI: lint and test jobs both passed, status Success in 1 minute 1 second"
+  }
+}

@@ -26,11 +26,12 @@
 .case-card[data-role="right"] { z-index: 2; }
 .case-card--empty { cursor: default; }
 
-/* Phone apps: two phones fanned behind a centred phone. --fl/--ft/--fw = the front spot (discovery start). */
-.case-screens--phone .case-card { --fl: 27.5%; --ft: 0%; --fw: 45%; aspect-ratio: 9 / 16; border-radius: 22px; }
-.case-screens--phone [data-role="front"] { left: 27.5%; top: 0; width: 45%; }
-.case-screens--phone [data-role="left"]  { left: 4%;  top: 16%; width: 34%; transform: rotate(-6deg); }
-.case-screens--phone [data-role="right"] { left: 62%; top: 16%; width: 34%; transform: rotate(6deg); }
+/* Phone apps: two phones fanned behind a centred phone, in iPhone 16 Pro proportions (MEDIA.md) so the
+   whole screen shows. The front phone is exactly as tall as the frame. --fl/--ft/--fw = the front spot. */
+.case-screens--phone .case-card { --fl: 31.5%; --ft: 0%; --fw: 37%; aspect-ratio: 1179 / 2556; border-radius: 22px; }
+.case-screens--phone [data-role="front"] { left: 31.5%; top: 0; width: 37%; }
+.case-screens--phone [data-role="left"]  { left: 7%;  top: 15%; width: 29%; transform: rotate(-6deg); }
+.case-screens--phone [data-role="right"] { left: 64%; top: 15%; width: 29%; transform: rotate(6deg); }
 /* Web, Mac and terminal projects: a stack of windows */
 .case-screens--window .case-card { --fl: 10%; --ft: 22%; --fw: 80%; aspect-ratio: 16 / 10; }
 .case-screens--window [data-role="front"] { left: 10%; top: 22%; width: 80%; }
